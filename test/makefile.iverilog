@@ -1,0 +1,16 @@
+SRC_DIR = $(PWD)/../src
+
+button_debounce_tb.vcd: button_debounce_tb.vvp
+	vvp $^
+	gtkwave -o $@ $@.gtkw
+
+button_debounce_tb.vvp: button_debounce_tb.v $(SRC_DIR)/button_debounce.v $(SRC_DIR)/clk_gen.v
+	iverilog -o $@ $^
+
+clk_gen_tb.vcd: clk_gen.vvp
+	vvp $^
+	gtkwave -o $@ $@.gtkw
+
+clk_gen.vvp: clk_gen_tb.v $(SRC_DIR)/clk_gen.v
+	iverilog -o $@ $^
+
