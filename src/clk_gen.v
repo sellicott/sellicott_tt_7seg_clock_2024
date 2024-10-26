@@ -26,7 +26,8 @@ module clk_gen (
   // output strobe signals
   o_1hz_stb,
   o_slow_set_stb,
-  o_fast_set_stb
+  o_fast_set_stb,
+  o_debounce_stb
 );
 
 input wire i_reset_n;
@@ -36,6 +37,7 @@ input wire i_refclk;
 output wire o_1hz_stb;
 output wire o_slow_set_stb;
 output wire o_fast_set_stb;
+output wire o_debounce_stb;
 
 wire refclk_stb;
 
@@ -82,6 +84,14 @@ stb_gen stb_gen_fast_clk (
   .i_clk     (i_clk),
   .i_sig     (refclk_div[11]),
   .o_sig_stb (o_fast_set_stb)
+);
+
+// 32,768 / 2^3 -> 4096Hz 
+stb_gen stb_gen_debounce_clk (
+  .i_reset_n (i_reset_n),
+  .i_clk     (i_clk),
+  .i_sig     (refclk_div[3]),
+  .o_sig_stb (o_debounce_stb)
 );
 
 endmodule
