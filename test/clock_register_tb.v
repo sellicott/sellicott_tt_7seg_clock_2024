@@ -15,7 +15,7 @@ module clock_register_tb ();
   // setup file dumping things
   localparam STARTUP_DELAY = 5;
   initial begin
-    $dumpfile("clock_register_tb.vcd");
+    $dumpfile("clock_register_tb.fst");
     $dumpvars(0, clock_register_tb);
     #STARTUP_DELAY;
 

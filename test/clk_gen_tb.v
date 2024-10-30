@@ -14,7 +14,7 @@ module clk_gen_tb ();
   // setup file dumping things
   localparam STARTUP_DELAY = 5;
   initial begin
-    $dumpfile("clk_gen_tb.vcd");
+    $dumpfile("clk_gen_tb.fst");
     $dumpvars(0, clk_gen_tb);
     #STARTUP_DELAY;
 

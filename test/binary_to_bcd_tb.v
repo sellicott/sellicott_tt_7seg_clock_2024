@@ -13,7 +13,7 @@ module binary_to_bcd_tb ();
   // setup file dumping things
   localparam STARTUP_DELAY = 5;
   initial begin
-    $dumpfile("binary_to_bcd_tb.vcd");
+    $dumpfile("binary_to_bcd_tb.fst");
     $dumpvars(0, binary_to_bcd_tb);
     #STARTUP_DELAY;
 

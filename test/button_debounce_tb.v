@@ -19,7 +19,7 @@ module button_debounce_tb ();
   // setup file dumping things
   localparam STARTUP_DELAY = 5;
   initial begin
-    $dumpfile("button_debounce_tb.vcd");
+    $dumpfile("button_debounce_tb.fst");
     $dumpvars(0, button_debounce_tb);
     #STARTUP_DELAY;
 
