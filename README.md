@@ -1,10 +1,10 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
 # 7-Segment LED Desk Clock
-[!NOTE]
-Example Project for Fall 2024 Columbus SSCS/CAS Tiny Tapeout Workshop
-This is a demonstration Tiny Tapeout project for the workshop series held by the
-[Columbus chapter of IEEE SSCS/CAS](https://r2.ieee.org/columbus-ssccas/blog/2024/01/14/tiny-tapeout-workshop-announcement/).
+> [!NOTE]
+> Example Project for Fall 2024 Columbus SSCS/CAS Tiny Tapeout Workshop
+> This is a demonstration Tiny Tapeout project for the workshop series held by the
+> [Columbus chapter of IEEE SSCS/CAS](https://r2.ieee.org/columbus-ssccas/blog/2024/01/14/tiny-tapeout-workshop-announcement/).
 
 The goal of this project is to demonstrate the Tiny Tapeout flow starting from
 a Verilog design to build a GDS file for manufacturing. 
@@ -30,13 +30,13 @@ the seconds will be cleared to zero.
 This project can be locally simulated (including on Windows) using the [OSS-CAD-Suite](https://github.com/YosysHQ/oss-cad-suite-build/releases) from YosysHQ.
 For instructions on setting up the tools, see [Open Source IC Resources](https://r2.ieee.org/columbus-ssccas/resources/open-source-ic-tools/) on the Columbus SSCS/CAS website.
 
-[!CAUTION]
-OSS-CAD-Suite must be installed to a path without spaces
+> [!CAUTION]
+> OSS-CAD-Suite must be installed to a path without spaces
 
 ## Clone the Git Repository
-[!NOTE]
-The following instructions are provided in order to use PortableGit.
-If already familiar with git, proceed normally.
+> [!NOTE]
+> The following instructions are provided in order to use PortableGit.
+> If already familiar with git, proceed normally.
 
 Once the tools are setup, clone this repository to the same directory that the tools are located.
 ![](docs/clone_project.png)
@@ -51,9 +51,9 @@ Now, the various modules in the project can be simulated individually.
 The following instructions describe the commands to simulate each included testbench. Run them by copy-pasting into the OSS CAD Suite terminal 
 (setup by running [start.bat](start.bat))
 
-[!NOTE]
-The [start.bat](start.bat) script assumes that portable git is being used, and is installed in the same directory as `oss-cad-suite`. It also assumes that the git repository was cloned in the same folder as `oss-cad-suite`.
-If this is not the case, modify the script accordingly.
+> [!NOTE]
+> The [start.bat](start.bat) script assumes that portable git is being used, and is installed in the same directory as `oss-cad-suite`. It also assumes that the git repository was cloned in the same folder as `oss-cad-suite`.
+> If this is not the case, modify the script accordingly.
 
 In general, testbenches can be run with the following commands
 ```batch
