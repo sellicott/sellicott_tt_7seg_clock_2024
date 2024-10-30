@@ -41,7 +41,7 @@ module clk_gen_tb ();
 
 
   // model specific signals
-  localparam REFCLK_PERIOD = 30518;
+  localparam REFCLK_PERIOD = 3051;
   localparam REFCLK_HALF_PERIOD = REFCLK_PERIOD/2;
   reg refclk = 0;
 

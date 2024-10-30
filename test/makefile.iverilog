@@ -1,30 +1,28 @@
-SRC_DIR = $(PWD)/../src
+SRC_DIR = ../src
 
-binary_to_bcd_tb.vcd: binary_to_bcd_tb.vvp
-	vvp $^
-	gtkwave -o $@ $@.gtkw
+binary_to_bcd_tb: binary_to_bcd_tb.vcd
+	gtkwave -o $< $@.gtkw
+
+clock_register_tb: clock_register_tb.vcd
+	gtkwave -o $< $@.gtkw
+
+button_debounce_tb: button_debounce_tb.vcd
+	gtkwave -o $< $@.gtkw
+
+clk_gen_tb: clk_gen_tb.vcd
+	gtkwave -o $< $@.gtkw
 
 binary_to_bcd_tb.vvp: binary_to_bcd_tb.v $(SRC_DIR)/binary_to_bcd.v
 	iverilog -o $@ $^
 
-clock_register_tb.vcd: clock_register_tb.vvp
-	vvp $^
-	gtkwave -o $@ $@.gtkw
-
 clock_register_tb.vvp: clock_register_tb.v $(SRC_DIR)/clock_register.v $(SRC_DIR)/button_debounce.v $(SRC_DIR)/clk_gen.v
 	iverilog -o $@ $^
-
-button_debounce_tb.vcd: button_debounce_tb.vvp
-	vvp $^
-	gtkwave -o $@ $@.gtkw
 
 button_debounce_tb.vvp: button_debounce_tb.v $(SRC_DIR)/button_debounce.v $(SRC_DIR)/clk_gen.v
 	iverilog -o $@ $^
 
-clk_gen_tb.vcd: clk_gen.vvp
-	vvp $^
-	gtkwave -o $@ $@.gtkw
-
-clk_gen.vvp: clk_gen_tb.v $(SRC_DIR)/clk_gen.v
+clk_gen_tb.vvp: clk_gen_tb.v $(SRC_DIR)/clk_gen.v
 	iverilog -o $@ $^
 
+%.vcd : %.vvp
+	vvp $^

@@ -1,8 +1,25 @@
-![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
+![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflTiny Tapeout Verilog Project Templateows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
-# Tiny Tapeout Verilog Project Template
+# 7-Segment LED Desk Clock: Example Project for Fall 2024 Columbus SSCS/CAS Tiny Tapeout Workshop
+For more information about the workshop visit the [chapter website](https://r2.ieee.org/columbus-ssccas/blog/2024/01/14/tiny-tapeout-workshop-announcement/).
 
 - [Read the documentation for project](docs/info.md)
+
+## Project Description
+
+Simple digital clock, displays hours, minutes, and seconds in either a 24h format. The goal for the project is to be a simple demonstration of Verilog concepts while still
+producing an interesting final project. The design is broken down into several components that should be filled in by workshop attendees. These are tested using the provided testbenches
+for functionality, then assembled into the final design.
+
+Since there are not enough output pins to directly drive a 6x
+7-segment displays, the data is shifted out serially using an internal 8-bit shift register.
+The shift register drives 6-external 74xx596 shift registers to the displays. Clock and control
+signals (`serial_clk`, `serial_latch`) are also used to shift and latch the data into the external 
+shift registers respectively. The time can be set using the `hours_set` and `minutes_set` inputs.
+If `set_fast` is high, then the the hours or minutes will be incremented at a rate of 5Hz, 
+otherwise it will be set at a rate of 2Hz. Note that when setting either the minutes, rolling-over
+will not affect the hours setting. If both `hours_set` and `minutes_set` are presssed at the same time
+the seconds will be cleared to zero.
 
 ## What is Tiny Tapeout?
 
