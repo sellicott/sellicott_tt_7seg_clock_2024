@@ -1,5 +1,19 @@
 SRC_DIR = $(PWD)/../src
 
+binary_to_bcd_tb.vcd: binary_to_bcd_tb.vvp
+	vvp $^
+	gtkwave -o $@ $@.gtkw
+
+binary_to_bcd_tb.vvp: binary_to_bcd_tb.v $(SRC_DIR)/binary_to_bcd.v
+	iverilog -o $@ $^
+
+clock_register_tb.vcd: clock_register_tb.vvp
+	vvp $^
+	gtkwave -o $@ $@.gtkw
+
+clock_register_tb.vvp: clock_register_tb.v $(SRC_DIR)/clock_register.v $(SRC_DIR)/button_debounce.v $(SRC_DIR)/clk_gen.v
+	iverilog -o $@ $^
+
 button_debounce_tb.vcd: button_debounce_tb.vvp
 	vvp $^
 	gtkwave -o $@ $@.gtkw
