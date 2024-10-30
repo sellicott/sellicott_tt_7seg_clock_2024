@@ -1,4 +1,8 @@
-SRC_DIR = ../src
+SRC_DIR = $(PWD)/../src
+
+.PHONY: binary_to_bcd_tb clock_register_tb button_debounce_tb clk_gen_tb all clean
+
+all: clk_gen_tb.vcd button_debounce_tb.vcd clock_register_tb.vcd binary_to_bcd_tb.vcd
 
 binary_to_bcd_tb: binary_to_bcd_tb.vcd
 	gtkwave -o $< $@.gtkw
@@ -26,3 +30,8 @@ clk_gen_tb.vvp: clk_gen_tb.v $(SRC_DIR)/clk_gen.v
 
 %.vcd : %.vvp
 	vvp $^
+
+clean:
+	-rm *.vcd
+	-rm *.vvp
+	-rm *.fst
