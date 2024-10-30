@@ -31,9 +31,10 @@ jobs:
         if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
-          name: clk_gen_tb vcd
+          name: simulation traces
           path: |
             test/clk_gen_tb.vcd
+            test/button_debounce_tb.vcd
+            test/clock_register_tb.vcd
+            test/binary_to_bcd_tb.vcd
             test/results.xml
-          path: |
-            test/
