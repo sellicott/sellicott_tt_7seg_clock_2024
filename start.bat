@@ -4,10 +4,10 @@
 
 :: Path to location where PortableGit and oss-cad-suite are located
 :: Defaults to the directory above the location of the git repo
-@set TOOLS_PATH="%~dp0\.."
+@set TOOLS_PATH=%~dp0..
 
 :: Location of PortableGit for Windows
-@set GIT_PATH="%TOOLS_PATH%\PortableGit\cmd"
+@set GIT_PATH=%TOOLS_PATH%\PortableGit\cmd
 
 :: Reset the command prompt path to the defaults for Windows 10
 :: with the addition of PortableGit.
