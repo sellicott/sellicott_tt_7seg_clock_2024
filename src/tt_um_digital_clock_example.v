@@ -16,8 +16,8 @@ module tt_um_digital_clock_example (
     input  wire       clk,      // clock ~ 10MHz
     input  wire       rst_n     // reset_n - low to reset
 );
-parameter SYS_CLK_HZ   =  5_000_000;
-parameter REF_CLK_HZ   =     32_768;
+parameter SYS_CLK_HZ  =  5_000_000;
+parameter REF_CLK_HZ  =     32_768;
 parameter DEBOUNCE_SAMPLES = 5;
 
 wire i_refclk      = ui_in[0];

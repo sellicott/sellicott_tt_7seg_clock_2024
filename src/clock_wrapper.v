@@ -1,7 +1,10 @@
 /*
  * clock_wrapper.v
- * author: Samuel Ellicott
- * date:  11/03/23 
+ * Copyright (c) 2024 Samuel Ellicott
+ * SPDX-License-Identifier: Apache-2.0
+ * date: November 03, 2023
+ * updated: October 30, 2024
+ *
  * Wrap all the important bits of the clock for tiny tapeout
  * This includes the
  * - button debouncing
@@ -10,7 +13,6 @@
  * - BCD to 7-segment display
  * - 7-segment serializer
  */
-`timescale 1ns / 1ns
 `default_nettype none
 
 module clock_wrapper (

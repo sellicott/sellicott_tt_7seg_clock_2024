@@ -8,6 +8,12 @@
 `default_nettype none
 `timescale 1ns / 1ns
 
+`define assert(signal, value) \
+  if (signal != value) begin \
+    $display("ASSERTION FAILED in %m:\n\t %b (actual) != %b (expected)", signal, value); \
+    close(); \
+  end
+
 module binary_to_bcd_tb ();
 
   // setup file dumping things
@@ -41,22 +47,23 @@ module binary_to_bcd_tb ();
   reg [7:0] binary_reg = 7'h0;
   wire [3:0] bcd_h;
   wire [3:0] bcd_l;
-
-  always @(posedge clk) begin
-    binary_reg <= binary_reg + 7'd1;
-  end
   
   binary_to_bcd bcd_conv_inst (
-    .i_binary(binary_reg),
+    .i_binary(binary_reg[6:0]),
     .o_bcd_msb(bcd_h),
     .o_bcd_lsb(bcd_l)
   );
 
   task run_test();
     begin
-      while (binary_reg <= 7'd127) begin
-        $display("%d => %d%d", binary_reg, bcd_h, bcd_l);
+      for (binary_reg = 7'd0; binary_reg <= 7'd127; binary_reg = binary_reg + 1'd1) begin
         @(posedge clk);
+        $display("%d => %d%d", binary_reg, bcd_h, bcd_l);
+
+        if (binary_reg < 7'd100) begin
+          `assert(bcd_h, binary_reg / 10);
+          `assert(bcd_l, binary_reg % 10);
+        end
       end
     end
   endtask

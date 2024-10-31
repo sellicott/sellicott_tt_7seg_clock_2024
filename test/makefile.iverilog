@@ -1,20 +1,32 @@
 SRC_DIR = $(PWD)/../src
 
-.PHONY: binary_to_bcd_tb clock_register_tb button_debounce_tb clk_gen_tb all clean
+.PHONY: binary_to_bcd_tb clock_register_tb button_debounce_tb clk_gen_tb bcd_to_7seg_tb all clean
 
-all: clk_gen_tb.fst button_debounce_tb.fst clock_register_tb.fst binary_to_bcd_tb.fst
+all: clk_gen_tb.fst button_debounce_tb.fst clock_register_tb.fst binary_to_bcd_tb.fst bcd_to_7seg_tb.fst
 
-binary_to_bcd_tb: binary_to_bcd_tb.vcd
+clock_to_7seg_tb: clock_to_7seg_tb.fst
 	gtkwave -o $< $@.gtkw
 
-clock_register_tb: clock_register_tb.vcd
+bcd_to_7seg_tb: bcd_to_7seg_tb.fst
 	gtkwave -o $< $@.gtkw
 
-button_debounce_tb: button_debounce_tb.vcd
+binary_to_bcd_tb: binary_to_bcd_tb.fst
 	gtkwave -o $< $@.gtkw
 
-clk_gen_tb: clk_gen_tb.vcd
+clock_register_tb: clock_register_tb.fst
 	gtkwave -o $< $@.gtkw
+
+button_debounce_tb: button_debounce_tb.fst
+	gtkwave -o $< $@.gtkw
+
+clk_gen_tb: clk_gen_tb.fst
+	gtkwave -o $< $@.gtkw
+
+clock_to_7seg_tb.vvp: clock_to_7seg_tb.v test_7seg_to_bcd.v $(SRC_DIR)/clock_to_7seg.v $(SRC_DIR)/binary_to_bcd.v $(SRC_DIR)/bcd_to_7seg.v
+	iverilog -o $@ $^
+
+bcd_to_7seg_tb.vvp: bcd_to_7seg_tb.v $(SRC_DIR)/bcd_to_7seg.v
+	iverilog -o $@ $^
 
 binary_to_bcd_tb.vvp: binary_to_bcd_tb.v $(SRC_DIR)/binary_to_bcd.v
 	iverilog -o $@ $^
@@ -28,7 +40,7 @@ button_debounce_tb.vvp: button_debounce_tb.v $(SRC_DIR)/button_debounce.v $(SRC_
 clk_gen_tb.vvp: clk_gen_tb.v $(SRC_DIR)/clk_gen.v
 	iverilog -o $@ $^
 
-%.vcd : %.vvp
+%.vcd: %.vvp
 	vvp $^
 
 %.fst : %.vvp
