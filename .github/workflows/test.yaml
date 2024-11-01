@@ -19,7 +19,7 @@ jobs:
           make -f makefile.iverilog clean
           make -f makefile.iverilog
           # make will return success even if the test fails, so check for failure in the results logfile
-          ! grep Failure logfile.txt
+          ! grep FAILED logfile.txt
 
       - name: upload vcd
         if: success() || failure()
@@ -33,4 +33,6 @@ jobs:
             test/binary_to_bcd_tb.fst
             test/bcd_to_7seg_tb.fst
             test/clock_to_bcd_tb.fst
+            test/max7219_tb.fst
+            test/max7219_settings_tb.fst
             test/logfile.txt

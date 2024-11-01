@@ -1,6 +1,5 @@
 SRC_DIR = $(PWD)/../src
 
-.PHONY: binary_to_bcd_tb clock_register_tb button_debounce_tb clk_gen_tb bcd_to_7seg_tb clock_to_bcd_tb all clean
 
 SRC_TESTBENCHES := clk_gen_tb.v
 SRC_TESTBENCHES += button_debounce_tb.v
@@ -13,30 +12,12 @@ SRC_TESTBENCHES += max7219_settings_tb.v
 
 TESTBENCH_FST = $(SRC_TESTBENCHES:.v=.fst)
 TESTBENCH_LOG = $(SRC_TESTBENCHES:.v=.log)
+TESTBENCH_SIM = $(basename $(SRC_TESTBENCHES))
+
+.PHONY: $(TESTBENCH_SIM) all clean
 
 all: $(TESTBENCH_FST)
 	cat $(TESTBENCH_LOG) > logfile.txt
-
-max7219_settings_tb: max7219_settings_tb.fst
-	-gtkwave -o $< $@.gtkw &
-
-clock_to_bcd_tb: clock_to_7seg_tb.fst
-	-gtkwave -o $< $@.gtkw &
-
-bcd_to_7seg_tb: bcd_to_7seg_tb.fst
-	-gtkwave -o $< $@.gtkw &
-
-binary_to_bcd_tb: binary_to_bcd_tb.fst
-	-gtkwave -o $< $@.gtkw &
-
-clock_register_tb: clock_register_tb.fst
-	-gtkwave -o $< $@.gtkw &
-
-button_debounce_tb: button_debounce_tb.fst
-	-gtkwave -o $< $@.gtkw &
-
-clk_gen_tb: clk_gen_tb.fst
-	-gtkwave -o $< $@.gtkw &
 
 max7219_settings_tb.vvp: max7219_settings_tb.v $(SRC_DIR)/max7219_settings.v $(SRC_DIR)/max7219.v
 	iverilog -o $@ $^
@@ -62,11 +43,16 @@ button_debounce_tb.vvp: button_debounce_tb.v $(SRC_DIR)/button_debounce.v $(SRC_
 clk_gen_tb.vvp: clk_gen_tb.v $(SRC_DIR)/clk_gen.v
 	iverilog -o $@ $^
 
+# Generate output files from elaborated simulation
 %.vcd: %.vvp
 	vvp $^
 
 %.fst : %.vvp
 	vvp $^ -fst | tee $*.log
+
+# run gtkwave on a simulation output file
+% : %.fst
+	-gtkwave -o $< $@.gtkw &
 
 clean:
 	-rm *.vcd
