@@ -21,12 +21,6 @@ jobs:
           # make will return success even if the test fails, so check for failure in the results logfile
           ! grep Failure logfile.txt
 
-      - name: Test Summary
-        uses: test-summary/action@v2.3
-        with:
-          paths: "test/logfile.txt"
-        if: always()
-
       - name: upload vcd
         if: success() || failure()
         uses: actions/upload-artifact@v4
