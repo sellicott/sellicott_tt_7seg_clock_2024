@@ -13,9 +13,18 @@ module output_wrapper (
     i_start_stb,
     o_busy,
 
-    .i_7seg,
-
-    .o_seg_select,
+    i_hours_msb,
+    i_hours_lsb,
+    i_minutes_msb,
+    i_minutes_lsb,
+    i_seconds_msb,
+    i_seconds_lsb,
+    i_dp_hours1,
+    i_dp_hours2,
+    i_dp_minutes1,
+    i_dp_minutes2,
+    i_dp_seconds1,
+    i_dp_seconds2,
 
     o_serial_data,
     o_serial_latch,
