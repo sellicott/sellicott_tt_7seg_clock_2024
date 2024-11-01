@@ -8,12 +8,17 @@ SRC_TESTBENCHES += clock_register_tb.v
 SRC_TESTBENCHES += binary_to_bcd_tb.v
 SRC_TESTBENCHES += bcd_to_7seg_tb.v
 SRC_TESTBENCHES += clock_to_bcd_tb.v
+SRC_TESTBENCHES += max7219_tb.v
+SRC_TESTBENCHES += max7219_settings_tb.v
 
 TESTBENCH_FST = $(SRC_TESTBENCHES:.v=.fst)
 TESTBENCH_LOG = $(SRC_TESTBENCHES:.v=.log)
 
 all: $(TESTBENCH_FST)
 	cat $(TESTBENCH_LOG) > logfile.txt
+
+max7219_settings_tb: max7219_settings_tb.fst
+	-gtkwave -o $< $@.gtkw &
 
 clock_to_bcd_tb: clock_to_7seg_tb.fst
 	-gtkwave -o $< $@.gtkw &
@@ -32,6 +37,12 @@ button_debounce_tb: button_debounce_tb.fst
 
 clk_gen_tb: clk_gen_tb.fst
 	-gtkwave -o $< $@.gtkw &
+
+max7219_settings_tb.vvp: max7219_settings_tb.v $(SRC_DIR)/max7219_settings.v $(SRC_DIR)/max7219.v
+	iverilog -o $@ $^
+
+max7219_tb.vvp: max7219_tb.v $(SRC_DIR)/max7219.v
+	iverilog -o $@ $^
 
 clock_to_bcd_tb.vvp: clock_to_bcd_tb.v $(SRC_DIR)/clock_to_bcd.v $(SRC_DIR)/binary_to_bcd.v
 	iverilog -o $@ $^
