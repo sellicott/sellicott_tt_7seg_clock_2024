@@ -9,6 +9,7 @@ SRC_TESTBENCHES += bcd_to_7seg_tb.v
 SRC_TESTBENCHES += clock_to_bcd_tb.v
 SRC_TESTBENCHES += max7219_tb.v
 SRC_TESTBENCHES += max7219_settings_tb.v
+SRC_TESTBENCHES += output_wrapper_tb.v
 
 TESTBENCH_FST = $(SRC_TESTBENCHES:.v=.fst)
 TESTBENCH_LOG = $(SRC_TESTBENCHES:.v=.log)

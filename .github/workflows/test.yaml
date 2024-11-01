@@ -35,4 +35,5 @@ jobs:
             test/clock_to_bcd_tb.fst
             test/max7219_tb.fst
             test/max7219_settings_tb.fst
+            test/output_wrapper_tb.fst
             test/logfile.txt
