@@ -24,7 +24,7 @@ module clock_wrapper (
   i_set_hours,    // stop updating time (from refclk) and set hours
   i_set_minutes,  // stop updating time (from refclk) and set minutes
 
-  o_serial_data,
+  o_serial_dout,
   o_serial_load,
   o_serial_clk
 );
@@ -39,7 +39,7 @@ module clock_wrapper (
   input wire i_set_hours;
   input wire i_set_minutes;
   
-  output wire o_serial_data;
+  output wire o_serial_dout;
   output wire o_serial_latch;
   output wire o_serial_clk;
   
@@ -121,23 +121,30 @@ module clock_wrapper (
   );
 
   wire [5:0] seg_dp;
-  wire [3:0] seg_select;
-  wire [7:0] disp_bcd;
-  wire       disp_dp;
+  wire display_busy;
+  wire display_ack;
+  wire write_config;
 
-  clock_to_bcd clock_output_select (
-    .i_clk     (i_clk),
+  output_wrapper display_inst (
     .i_reset_n (i_reset_n),
+    .i_clk     (i_clk),
+    .i_stb     (i_stb),
+    .o_busy    (display_busy),
+    .o_ack     (display_ack),
 
+    .i_write_config (write_config),
+
+    // input signals from the clock
     .i_hours   (clk_hours),
     .i_minutes (clk_minutes),
     .i_seconds (clk_seconds),
-    .i_dp      (seg_dp),
+    .i_dp      (clk_dp),
 
-    .i_seg_select (seg_select),
-
-    .o_bcd (disp_7seg),
-    .o_dp  (disp_dp)
+    // SPI output
+    .o_serial_dout (serial_dout),
+    .o_serial_load (serial_load),
+    .o_serial_clk  (serial_clk)
   );
+
 
 endmodule
