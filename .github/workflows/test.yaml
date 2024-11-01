@@ -18,13 +18,13 @@ jobs:
           cd test
           make -f makefile.iverilog clean
           make -f makefile.iverilog
-          # make will return success even if the test fails, so check for failure in the results.xml
-          ! grep failure results.xml
+          # make will return success even if the test fails, so check for failure in the results logfile
+          ! grep Failure logfile.txt
 
       - name: Test Summary
         uses: test-summary/action@v2.3
         with:
-          paths: "test/results.xml"
+          paths: "test/logfile.txt"
         if: always()
 
       - name: upload vcd
@@ -33,8 +33,10 @@ jobs:
         with:
           name: simulation traces
           path: |
-            test/clk_gen_tb.vcd
-            test/button_debounce_tb.vcd
-            test/clock_register_tb.vcd
-            test/binary_to_bcd_tb.vcd
-            test/results.xml
+            test/clk_gen_tb.fst
+            test/button_debounce_tb.fst
+            test/clock_register_tb.fst
+            test/binary_to_bcd_tb.fst
+            test/bcd_to_7seg_tb.fst
+            test/clock_to_bcd_tb.fst
+            test/logfile.txt

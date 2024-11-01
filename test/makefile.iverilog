@@ -1,8 +1,19 @@
 SRC_DIR = $(PWD)/../src
 
-.PHONY: binary_to_bcd_tb clock_register_tb button_debounce_tb clk_gen_tb bcd_to_7seg_tb all clean
+.PHONY: binary_to_bcd_tb clock_register_tb button_debounce_tb clk_gen_tb bcd_to_7seg_tb clock_to_bcd_tb all clean
 
-all: clk_gen_tb.fst button_debounce_tb.fst clock_register_tb.fst binary_to_bcd_tb.fst bcd_to_7seg_tb.fst clock_to_bcd_tb.fst
+SRC_TESTBENCHES := clk_gen_tb.v
+SRC_TESTBENCHES += button_debounce_tb.v
+SRC_TESTBENCHES += clock_register_tb.v
+SRC_TESTBENCHES += binary_to_bcd_tb.v
+SRC_TESTBENCHES += bcd_to_7seg_tb.v
+SRC_TESTBENCHES += clock_to_bcd_tb.v
+
+TESTBENCH_FST = $(SRC_TESTBENCHES:.v=.fst)
+TESTBENCH_LOG = $(SRC_TESTBENCHES:.v=.log)
+
+all: $(TESTBENCH_FST)
+	cat $(TESTBENCH_LOG) > logfile.txt
 
 clock_to_bcd_tb: clock_to_7seg_tb.fst
 	-gtkwave -o $< $@.gtkw &
@@ -44,7 +55,7 @@ clk_gen_tb.vvp: clk_gen_tb.v $(SRC_DIR)/clk_gen.v
 	vvp $^
 
 %.fst : %.vvp
-	vvp $^ -fst
+	vvp $^ -fst | tee $*.log
 
 clean:
 	-rm *.vcd
