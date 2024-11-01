@@ -35,9 +35,9 @@ input wire [5:0] i_minutes;
 input wire [5:0] i_seconds;
 input wire [5:0] i_dp;
 
-input wire [3:0] i_seg_select;
+input wire [2:0] i_seg_select;
 
-output wire [7:0] o_bcd;
+output wire [3:0] o_bcd;
 output wire o_dp;
 
 // generate internal wires that zero out the appropriate signals for the
@@ -51,27 +51,27 @@ reg [6:0] time_int;
 reg seg_dp;
 always @(*) begin
   case (i_seg_select)
-    4'h0: begin
+    3'h0: begin
       time_int = hours_int;
       seg_dp   = i_dp[5];
     end
-    4'h1: begin 
+    3'h1: begin 
       time_int = hours_int;
       seg_dp   = i_dp[4];
     end
-    4'h2: begin
+    3'h2: begin
       time_int = minutes_int;
       seg_dp   = i_dp[3];
     end
-    4'h3: begin
+    3'h3: begin
       time_int = minutes_int;
       seg_dp   = i_dp[2];
     end
-    4'h4: begin
+    3'h4: begin
       time_int = seconds_int;
       seg_dp   = i_dp[1];
     end
-    4'h5: begin 
+    3'h5: begin 
       time_int = seconds_int;
       seg_dp   = i_dp[0];
     end

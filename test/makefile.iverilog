@@ -19,6 +19,12 @@ TESTBENCH_SIM = $(basename $(SRC_TESTBENCHES))
 all: $(TESTBENCH_FST)
 	cat $(TESTBENCH_LOG) > logfile.txt
 
+output_wrapper_tb.vvp: output_wrapper_tb.v \
+  $(SRC_DIR)/output_wrapper.v \
+  $(SRC_DIR)/clock_to_bcd.v $(SRC_DIR)/binary_to_bcd.v \
+  $(SRC_DIR)/max7219_settings.v $(SRC_DIR)/max7219.v
+	iverilog -o $@ $^
+
 max7219_settings_tb.vvp: max7219_settings_tb.v $(SRC_DIR)/max7219_settings.v $(SRC_DIR)/max7219.v
 	iverilog -o $@ $^
 
