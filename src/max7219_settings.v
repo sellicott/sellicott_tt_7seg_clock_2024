@@ -67,7 +67,8 @@ module max7219_settings (
   output reg [7:0] o_data;
 
   localparam IDLE      = 0;
-  localparam TRANSFER  = 1;
+  localparam LOAD      = 1;
+  localparam TRANSFER  = 2;
   localparam REGISTERS = 5;
   localparam END_TRANSFER = TRANSFER + REGISTERS;
 
@@ -79,7 +80,11 @@ module max7219_settings (
   always @(posedge i_clk) begin
     // start the transfer sequence if we get a start signal and we aren't busy
     if (start_transfer) begin
-      transfer_state <= TRANSFER;
+      // only write once if we aren't writing the whole config
+      transfer_state <= i_write_config ? LOAD : END_TRANSFER - 4'd1;
+    end
+    else if (transfer_state == LOAD) begin
+      transfer_state <= transfer_state + 1'd1;
     end
     // immediately go to the transfer state after loading the data
     else if (transfer_state >= TRANSFER && i_next) begin 
@@ -87,9 +92,9 @@ module max7219_settings (
     end
 
     // only write once if we aren't writing the whole config
-    if (transfer_state >= TRANSFER && i_next && !write_config) begin
-      transfer_state <= END_TRANSFER;
-    end
+    //if (transfer_state >= TRANSFER && i_next && !write_config) begin
+    //  transfer_state <= END_TRANSFER;
+    //end
 
     if (transfer_state >= END_TRANSFER) begin 
       transfer_state <= IDLE;
@@ -100,7 +105,7 @@ module max7219_settings (
     end
   end
 
-  assign o_write = (transfer_state > IDLE) && !o_ack;
+  assign o_write = (transfer_state >= TRANSFER) && !o_ack;
   
   always @(posedge i_clk) begin 
     if (start_transfer) begin 
@@ -112,25 +117,25 @@ module max7219_settings (
       enable       <= i_enable;
       display_test <= i_display_test;
     end
-    else if(transfer_state >= TRANSFER && write_config) begin
-      case (transfer_state)
-        4'h1: begin
+    else if(transfer_state >= LOAD && write_config) begin
+      case (transfer_state - LOAD)
+        4'h0: begin
           o_addr <= DECODE_MODE_ADDR;
           o_data <= decode_mode;
         end
-        4'h2: begin
+        4'h1: begin
           o_addr <= INTENSITY_ADDR;
           o_data <= {4'h0, intensity};
         end
-        4'h3: begin
+        4'h2: begin
           o_addr <= SCAN_LIMIT_ADDR;
           o_data <= {5'h0, scan_limit};
         end
-        4'h4: begin
+        4'h3: begin
           o_addr <= SHUTDOWN_ADDR;
           o_data <= {7'h0, enable};
         end
-        4'h5: begin
+        4'h4: begin
           o_addr <= DISPLAY_TEST_ADDR;
           o_data <= {7'h0, display_test};
         end

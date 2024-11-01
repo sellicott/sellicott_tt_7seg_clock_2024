@@ -57,9 +57,10 @@ module max7219 (
   reg [4:0] transfer_state;
   assign o_busy = (transfer_state > IDLE) && (transfer_state < LATCH);
   assign o_ack  = (transfer_state == LATCH);
+  wire start_transfer = (i_stb) && (!o_busy);
   always @(posedge i_clk) begin
     // start the transfer sequence if we get a start signal and we aren't busy
-    if ((i_stb) && (!o_busy)) begin
+    if (start_transfer) begin
       transfer_state <= TRANSFER;
     end
     // immediately go to the transfer state after loading the data
@@ -77,7 +78,7 @@ module max7219 (
   end
   
   always @(posedge i_clk) begin 
-    if (i_stb && (!o_busy)) begin 
+    if (start_transfer) begin 
       data_reg[15:12] <= 4'h0;
       data_reg[11:8]  <= i_addr;
       data_reg[7:0]   <= i_data;
