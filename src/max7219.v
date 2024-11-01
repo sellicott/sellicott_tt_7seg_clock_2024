@@ -2,18 +2,19 @@
  * max7219.v
  * Copyright (c) 2024 Samuel Ellicott
  * SPDX-License-Identifier: Apache-2.0
- * updated: October 31, 2024
+ * updated: November 1, 2024
  *
  * Driver for max7219 LED driver chip.
  * This driver writes data as a SPI output.
  */
 `default_nettype none
 
-module clock_wrapper (
+module max7219 (
   i_reset_n, // syncronous reset (active low)
   i_clk,     // fast system clock (~50MHz)
   i_stb,
   o_busy,
+  o_ack,
 
   i_addr,
   i_data,
@@ -28,13 +29,14 @@ module clock_wrapper (
   input  wire i_clk;
   input  wire i_stb;
   output wire o_busy;
+  output wire o_ack;
 
   input [3:0] i_addr;
   input [7:0] i_data;
 
   input  wire i_serial_din;
   output wire o_serial_dout;
-  output wire o_serial_latch;
+  output wire o_serial_load;
   output wire o_serial_clk;
 
   localparam IDLE     = 0;
@@ -43,23 +45,25 @@ module clock_wrapper (
   localparam LATCH    = TRANSFER + WIDTH;
   
   reg [15:0] data_reg; 
-  assign o_serial_dout  = data_reg[15];
-  assign o_serial_latch = !o_busy;
-  assign o_serial_clk   = i_clk & o_busy;
+  assign o_serial_dout = data_reg[15];
+  assign o_serial_load = !o_busy;
+  // invert the output clock for increased setup/hold time
+  assign o_serial_clk  = !i_clk & o_busy;
   
   // we need to update our data output on the falling edge of the clock for
   // maximum setup/hold time for the external latch. To do this, we will make
   // our state register have 2x the number of states as our data (8-bits), then
   // we will update our data on the odd pulses, and the data on the even ones.
   reg [4:0] transfer_state;
-  assign o_busy = (transfer_state >= IDLE) && (transfer_state < LATCH);
+  assign o_busy = (transfer_state > IDLE) && (transfer_state < LATCH);
+  assign o_ack  = (transfer_state == LATCH);
   always @(posedge i_clk) begin
     // start the transfer sequence if we get a start signal and we aren't busy
-    if ((i_start_stb) && (!o_busy)) begin
+    if ((i_stb) && (!o_busy)) begin
       transfer_state <= TRANSFER;
     end
     // immediately go to the transfer state after loading the data
-    else if (transfer_state >= LOAD) begin 
+    else if (transfer_state >= TRANSFER) begin 
       transfer_state <= transfer_state + 1'd1;
     end
 
@@ -73,7 +77,7 @@ module clock_wrapper (
   end
   
   always @(posedge i_clk) begin 
-    if (i_start_stb && (!o_busy)) begin 
+    if (i_stb && (!o_busy)) begin 
       data_reg[15:12] <= 4'h0;
       data_reg[11:8]  <= i_addr;
       data_reg[7:0]   <= i_data;
