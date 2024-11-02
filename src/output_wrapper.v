@@ -65,7 +65,7 @@ module output_wrapper (
     .o_dp   (clk_dp)
   );
 
-  wire [7:0] decode_mode  = 8'hf;
+  wire [7:0] decode_mode  = 8'hff;
   wire [3:0] intensity    = 4'h7;
   wire [2:0] scan_limit   = 3'h5;
   wire       enable       = 1;
@@ -124,7 +124,7 @@ module output_wrapper (
       state <= state + 1'd1;
     end
 
-    if (state == END_WRITE) begin
+    if (state >= END_WRITE) begin
       state <= IDLE;
     end
 

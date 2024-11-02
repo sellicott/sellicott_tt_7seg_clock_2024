@@ -53,9 +53,9 @@ output reg [4:0] o_hours;
 output reg [5:0] o_minutes;
 output reg [5:0] o_seconds;
 
-wire ovf_seconds = (o_seconds == 59) && i_1hz_stb;
-wire ovf_minutes = (o_minutes == 59) && ovf_seconds;
-wire ovf_hours   = (o_hours   == 23) && ovf_minutes;
+wire ovf_seconds = (o_seconds >= 59) && i_1hz_stb;
+wire ovf_minutes = (o_minutes >= 59) && ovf_seconds;
+wire ovf_hours   = (o_hours   >= 23) && ovf_minutes;
 
 wire hours_stb = (timeset_mode) ?
   ( (set_hours) ? i_set_stb : 1'h0 )
@@ -79,6 +79,10 @@ always @(posedge i_clk) begin
       o_hours <= o_hours + 5'h1;
   end
 
+  if (o_hours > 23) begin
+      o_hours <= RESET_HOURS;
+  end
+
   // reset register (highest priority)
   if (!i_reset_n) begin
     o_hours <= RESET_HOURS;
@@ -95,6 +99,11 @@ always @(posedge i_clk) begin
       o_minutes <= o_minutes + 6'h1;
   end
 
+  if (o_minutes > 59) begin
+      o_minutes <= RESET_MINUTES;
+  end
+
+
   // reset register (highest priority)
   if (!i_reset_n) begin
     o_minutes <= RESET_MINUTES;
@@ -109,6 +118,10 @@ always @(posedge i_clk) begin
       o_seconds <= RESET_SECONDS;
     else
       o_seconds <= o_seconds + 6'h1;
+  end
+
+  if (o_seconds > 59) begin
+      o_seconds <= RESET_SECONDS;
   end
 
   // reset register (highest priority)
