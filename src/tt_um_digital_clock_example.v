@@ -33,7 +33,7 @@ assign uio_out[3]   = o_serial_clk;  // SCK line
 assign uio_out[7:4] = 4'h0;
 
 // deal with the pins we aren't using currently
-assign uo_out[7:3]  = 8'h0;
+assign uo_out[7:0]  = 8'h0;
 assign uio_oe[7:0]  = 8'h0B;
 
 clock_wrapper desk_clock (

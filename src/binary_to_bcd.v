@@ -56,16 +56,16 @@ end
 
 always @(*) begin
    case(o_bcd_msb)
-       4'h9: o_bcd_lsb = bin - 7'd90;
-       4'h8: o_bcd_lsb = bin - 7'd80;
-       4'h7: o_bcd_lsb = bin - 7'd70;
-       4'h6: o_bcd_lsb = bin - 7'd60;
-       4'h5: o_bcd_lsb = bin - 7'd50;
-       4'h4: o_bcd_lsb = bin - 7'd40;
-       4'h3: o_bcd_lsb = bin - 7'd30;
-       4'h2: o_bcd_lsb = bin - 7'd20;
-       4'h1: o_bcd_lsb = bin - 7'd10;
-       4'h0: o_bcd_lsb = bin - 7'd00;
+       4'h9: o_bcd_lsb = (bin - 7'd90) & 7'h0f;
+       4'h8: o_bcd_lsb = (bin - 7'd80) & 7'h0f;
+       4'h7: o_bcd_lsb = (bin - 7'd70) & 7'h0f;
+       4'h6: o_bcd_lsb = (bin - 7'd60) & 7'h0f;
+       4'h5: o_bcd_lsb = (bin - 7'd50) & 7'h0f;
+       4'h4: o_bcd_lsb = (bin - 7'd40) & 7'h0f;
+       4'h3: o_bcd_lsb = (bin - 7'd30) & 7'h0f;
+       4'h2: o_bcd_lsb = (bin - 7'd20) & 7'h0f;
+       4'h1: o_bcd_lsb = (bin - 7'd10) & 7'h0f;
+       4'h0: o_bcd_lsb = (bin - 7'd00) & 7'h0f;
        default: o_bcd_lsb = 4'hf;
    endcase
 end

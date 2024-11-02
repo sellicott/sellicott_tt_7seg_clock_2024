@@ -103,9 +103,9 @@ module output_wrapper (
   );
 
   // iterate through the clock segments
-  localparam IDLE = 3'h0;
-  localparam WRITE = 3'h1;
-  localparam NUM_DIGITS = 3'd6;
+  localparam IDLE = 4'h0;
+  localparam WRITE = 4'h1;
+  localparam NUM_DIGITS = 4'd6;
   localparam END_WRITE  = WRITE + NUM_DIGITS;
 
   reg [3:0] state;
@@ -116,7 +116,7 @@ module output_wrapper (
         state <= WRITE;
       end
       else begin
-        state <= END_WRITE - 2'd1;
+        state <= END_WRITE - 4'd1;
       end
     end
     else if (state >= WRITE && driver_ack) begin
