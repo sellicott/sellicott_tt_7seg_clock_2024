@@ -87,6 +87,48 @@ module max7219_tb ();
     .o_serial_clk  (serial_clk)
   );
 
+  wire [7:0] digit0;
+  wire [7:0] digit1;
+  wire [7:0] digit2;
+  wire [7:0] digit3;
+  wire [7:0] digit4;
+  wire [7:0] digit5;
+  wire [7:0] digit6;
+  wire [7:0] digit7;
+
+  test_max7219_moc display_out (
+    .i_serial_din  (serial_dout),
+    .i_serial_load (serial_load),
+    .i_serial_clk  (serial_clk),
+
+    .o_digit0 (digit0),
+    .o_digit1 (digit1),
+    .o_digit2 (digit2),
+    .o_digit3 (digit3),
+    .o_digit4 (digit4),
+    .o_digit5 (digit5),
+    .o_digit6 (digit6),
+    .o_digit7 (digit7) 
+  );
+
+  wire [3:0] bcd0;
+  wire [3:0] bcd1;
+  wire [3:0] bcd2;
+  wire [3:0] bcd3;
+  wire [3:0] bcd4;
+  wire [3:0] bcd5;
+  wire [3:0] bcd6;
+  wire [3:0] bcd7;
+  
+  test_7seg_to_bcd bcd0_conv ( .i_led(digit0[6:0]), .o_bcd(bcd0) );
+  test_7seg_to_bcd bcd1_conv ( .i_led(digit1[6:0]), .o_bcd(bcd1) );
+  test_7seg_to_bcd bcd2_conv ( .i_led(digit2[6:0]), .o_bcd(bcd2) );
+  test_7seg_to_bcd bcd3_conv ( .i_led(digit3[6:0]), .o_bcd(bcd3) );
+  test_7seg_to_bcd bcd4_conv ( .i_led(digit4[6:0]), .o_bcd(bcd4) );
+  test_7seg_to_bcd bcd5_conv ( .i_led(digit5[6:0]), .o_bcd(bcd5) );
+  test_7seg_to_bcd bcd6_conv ( .i_led(digit6[6:0]), .o_bcd(bcd6) );
+  test_7seg_to_bcd bcd7_conv ( .i_led(digit7[6:0]), .o_bcd(bcd7) );
+
   localparam TIMEOUT=64;
   task write_register (
     input [3:0] addr_t,
@@ -127,6 +169,27 @@ module max7219_tb ();
       write_register(4'hA, 8'h07); // write intensity register ~50%
       write_register(4'hB, 8'h05); // write scan limit
       write_register(4'hC, 8'h01); // turn on display
+
+      write_register(4'h1, 8'h00);
+      `assert(bcd0, 4'h0);
+      write_register(4'h2, 8'h01);
+      `assert(bcd1, 4'h1);
+      write_register(4'h3, 8'h02);
+      `assert(bcd2, 4'h2);
+      write_register(4'h4, 8'h03);
+      `assert(bcd3, 4'h3);
+      write_register(4'h5, 8'h04);
+      `assert(bcd4, 4'h4);
+      write_register(4'h6, 8'h05);
+      `assert(bcd5, 4'h5);
+      write_register(4'h1, 8'h06);
+      `assert(bcd0, 4'h6);
+      write_register(4'h2, 8'h07);
+      `assert(bcd1, 4'h7);
+      write_register(4'h3, 8'h08);
+      `assert(bcd2, 4'h8);
+      write_register(4'h4, 8'h09);
+      `assert(bcd3, 4'h9);
     end
   endtask
 
