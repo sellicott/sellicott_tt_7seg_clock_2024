@@ -19,8 +19,8 @@ module tt_um_digital_clock_example (
 wire i_refclk      = ui_in[0];
 
 wire i_fast_set    = ui_in[2];
-wire i_hours_set   = ui_in[3];
-wire i_minutes_set = ui_in[4];
+wire i_set_hours   = ui_in[3];
+wire i_set_minutes = ui_in[4];
 
 wire o_serial_dout;
 wire o_serial_load;
