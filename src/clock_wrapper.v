@@ -40,10 +40,6 @@ module clock_wrapper (
   output wire o_serial_dout;
   output wire o_serial_load;
   output wire o_serial_clk;
-  
-  wire [5:0] clock_seconds;
-  wire [5:0] clock_minutes;
-  wire [4:0] clock_hours;
 
   // sync register
   wire refclk_sync;

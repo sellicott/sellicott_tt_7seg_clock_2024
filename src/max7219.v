@@ -88,7 +88,7 @@ module max7219 (
     end
 
     if (!i_reset_n) begin 
-      data_reg <= 15'h0;
+      data_reg <= 16'h0;
     end
   end
 

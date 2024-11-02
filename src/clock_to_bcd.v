@@ -76,7 +76,7 @@ always @(*) begin
       seg_dp   = i_dp[0];
     end
     default: begin
-      time_int = 6'h3f;
+      time_int = 7'h3f;
       seg_dp   = 1'b1;
     end
   endcase
