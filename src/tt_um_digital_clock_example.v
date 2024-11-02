@@ -26,13 +26,13 @@ wire o_serial_dout;
 wire o_serial_load;
 wire o_serial_clk;
 
-assign uo_out[0]  = o_serial_dout;
-assign uo_out[1]  = o_serial_load;
-assign uo_out[2]  = o_serial_clk;
+assign uio_out[0] = o_serial_load; // CS line
+assign uio_out[1] = o_serial_dout; // MOSI line
+assign uio_out[3] = o_serial_clk;  // SCK line
 
 // deal with the pins we aren't using currently
-assign uo_out[7:3]  = 5'h0;
-assign uio_oe[7:0]  = 8'h0;
+assign uo_out[7:3]  = 8'h0;
+assign uio_oe[7:0]  = 8'h0B;
 assign uio_out[7:0] = 8'h0;
 
 clock_wrapper desk_clock (

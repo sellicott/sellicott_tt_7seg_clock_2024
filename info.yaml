@@ -34,10 +34,10 @@ project:
 pinout:
   # Inputs
   ui[0]: "refclk"
-  ui[1]: "use_refclk"
-  ui[2]: "fast_set"
-  ui[3]: "minutes_set"
-  ui[4]: "hours_set"
+  ui[1]: ""
+  ui[2]: "Fast/Slow Set"
+  ui[3]: "Set Hours"
+  ui[4]: "Set Minutes"
   ui[5]: ""
   ui[6]: ""
   ui[7]: ""
@@ -53,10 +53,10 @@ pinout:
   uo[7]: ""
 
   # Bidirectional pins
-  uio[0]: ""
-  uio[1]: ""
+  uio[0]: "Display CS"
+  uio[1]: "Display MOSI"
   uio[2]: ""
-  uio[3]: ""
+  uio[3]: "Display SCK"
   uio[4]: ""
   uio[5]: ""
   uio[6]: ""
