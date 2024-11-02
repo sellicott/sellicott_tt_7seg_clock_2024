@@ -3,7 +3,6 @@
  * author: Samuel Ellicott
  * date: 03-20-23
  */
-`timescale 1ns / 1ns
 `default_nettype none
 
 module output_wrapper (
