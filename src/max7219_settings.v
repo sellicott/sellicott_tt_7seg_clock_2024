@@ -29,7 +29,7 @@ module max7219_settings (
   i_next,  // connect to ack line of max7219 driver
   o_write, // connect to stb line of max7219 driver
   o_addr,
-  o_data,
+  o_data
 );
 
   input  wire i_reset_n;
