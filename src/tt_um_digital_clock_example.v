@@ -45,9 +45,9 @@ clock_wrapper desk_clock (
   .i_set_hours   (i_set_hours),
   .i_set_minutes (i_set_minutes),
   
-  .o_serial_dout (serial_dout),
-  .o_serial_load (serial_load),
-  .o_serial_clk  (serial_clk)
+  .o_serial_dout (o_serial_dout),
+  .o_serial_load (o_serial_load),
+  .o_serial_clk  (o_serial_clk)
 );
 
 endmodule
