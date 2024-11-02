@@ -20,7 +20,6 @@ module clock_wrapper (
   i_refclk,       // 32.768 kHz clock
   i_en,           // enable the clock 
   i_fast_set,     // select the timeset speed (1 for fast, 0 for slow)
-  i_use_refclk,   // select between the system clock and an external reference
   i_set_hours,    // stop updating time (from refclk) and set hours
   i_set_minutes,  // stop updating time (from refclk) and set minutes
 
@@ -35,7 +34,6 @@ module clock_wrapper (
   input wire i_en;
 
   input wire i_fast_set;
-  input wire i_use_refclk;
   input wire i_set_hours;
   input wire i_set_minutes;
   
