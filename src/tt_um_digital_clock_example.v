@@ -1,9 +1,8 @@
 /* 
- * sellicott_digital_clock.v
+ * tt_um_digital_clock_example.v
  * Top level module for the digital clock deisgn
  * Wraps the actual design for use with the TinyTapeout4 template
  */
-`timescale 1ns / 1ns
 `default_nettype none
 
 module tt_um_digital_clock_example (
@@ -16,23 +15,19 @@ module tt_um_digital_clock_example (
     input  wire       clk,      // clock ~ 10MHz
     input  wire       rst_n     // reset_n - low to reset
 );
-parameter SYS_CLK_HZ  =  5_000_000;
-parameter REF_CLK_HZ  =     32_768;
-parameter DEBOUNCE_SAMPLES = 5;
 
 wire i_refclk      = ui_in[0];
-wire i_use_refclk  = ui_in[1];
 
 wire i_fast_set    = ui_in[2];
 wire i_hours_set   = ui_in[3];
 wire i_minutes_set = ui_in[4];
 
-wire o_serial_data;
-wire o_serial_latch;
+wire o_serial_dout;
+wire o_serial_load;
 wire o_serial_clk;
 
-assign uo_out[0]  = o_serial_data;
-assign uo_out[1]  = o_serial_latch;
+assign uo_out[0]  = o_serial_dout;
+assign uo_out[1]  = o_serial_load;
 assign uo_out[2]  = o_serial_clk;
 
 // deal with the pins we aren't using currently
@@ -40,25 +35,19 @@ assign uo_out[7:3]  = 5'h0;
 assign uio_oe[7:0]  = 8'h0;
 assign uio_out[7:0] = 8'h0;
 
-clock_wrapper #(
-	.SYS_CLK_HZ(SYS_CLK_HZ),
-	.REF_CLK_HZ(REF_CLK_HZ),
-	.SHIFT_CLK_HZ(SHIFT_CLK_HZ),
-	.DEBOUNCE_COUNT(DEBOUNCE_COUNT),
-	.FAST_SET_HZ(FAST_SET_HZ),
-	.SLOW_SET_HZ(SLOW_SET_HZ),
-	.DEBOUNCE_SAMPLES(DEBOUNCE_SAMPLES)
-) clock_inst (
-	.i_clk(clk),
-	.i_refclk(refclk),
-	.i_reset_n(rst_n),
-	.i_en(ena),
-	.i_use_refclk(use_refclk),
-	.i_fast_set(fast_set),
-	.i_mode(mode),
-
-	.o_serial_data(serial_data),
-	.o_serial_latch(serial_latch),
-	.o_serial_clk(serial_clk)
+clock_wrapper desk_clock (
+  .i_reset_n (rst_n),
+  .i_clk     (clk),
+  .i_refclk  (i_refclk),
+  .i_en      (ena),
+  
+  .i_fast_set    (i_fast_set),
+  .i_set_hours   (i_set_hours),
+  .i_set_minutes (i_set_minutes),
+  
+  .o_serial_dout (serial_dout),
+  .o_serial_load (serial_load),
+  .o_serial_clk  (serial_clk)
 );
+
 endmodule
