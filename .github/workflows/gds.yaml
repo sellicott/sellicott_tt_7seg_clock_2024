@@ -73,6 +73,8 @@ jobs:
     - name: Run tests
       shell: bash
       run: |
+        pwd
+        ls -l
         cp tt_submission/*.v "$TEST_DIR/gate_level_netlist.v"
         cd "$TEST_DIR"
         ls -l
