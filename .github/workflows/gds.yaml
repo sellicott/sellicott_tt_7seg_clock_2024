@@ -28,8 +28,6 @@ jobs:
   gl_test:
     needs: gds
     runs-on: ubuntu-24.04
-    env: 
-       TEST_DIR: ${{ github.workspace }}/test
     steps:
     - name: Download GDS artifact
       uses: actions/download-artifact@v4
@@ -41,6 +39,7 @@ jobs:
       run: |
         cat << EOF >> $GITHUB_ENV
         PDK_ROOT=/home/runner/pdk
+        TEST_DIR=${{ github.workspace }}/test
         PDK=sky130A
         EOF
 
