@@ -12,8 +12,13 @@ async def test_project(dut):
     dut._log.info("Start")
     dut._log.info("Run tests in Icarus Verilog")
 
+    clock = Clock(dut.clk_dummy, 10, units="us")
+    cocotb.start_soon(clock.start())
+
+
+
     # Wait for one clock cycle to see the output values
-    await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk_dummy, 1)
 
     # The following assersion is just an example of how to check the output values.
     # Change it to match the actual expected output of your module:

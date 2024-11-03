@@ -97,6 +97,7 @@ module max7219_tb ();
   wire [7:0] digit7;
 
   test_max7219_moc display_out (
+    .i_clk(clk),
     .i_serial_din  (serial_dout),
     .i_serial_load (serial_load),
     .i_serial_clk  (serial_clk),
@@ -151,6 +152,7 @@ module max7219_tb ();
       while (busy && timeout_counter <= TIMEOUT) @(posedge clk);
       `assert_cond(timeout_counter, <, TIMEOUT);
       run_timeout_counter = 1'h0;
+      repeat(2) @(posedge clk);
     end
   endtask
 

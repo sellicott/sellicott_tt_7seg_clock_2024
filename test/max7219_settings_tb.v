@@ -88,7 +88,7 @@ module max7219_settings_tb ();
     .i_segment ({4'h0, bcd}),
 
     .i_write_config (write_config),
-    .i_decode_mode  (decode_mode),
+    .i_decode_tmode  (decode_mode),
     .i_intensity    (intensity),
     .i_scan_limit   (scan_limit),
     .i_enable       (enable),
