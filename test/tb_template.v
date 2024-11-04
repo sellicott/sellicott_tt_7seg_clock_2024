@@ -1,10 +1,9 @@
 
-/* tiny_tapeout_tb.v
+/* tb_template.v
  * Copyright (c) 2024 Samuel Ellicott
  * SPDX-License-Identifier: Apache-2.0
  *
- * Testbench for clock register, this tests the functionality of holding and
- * setting the time of the clock.
+ * Generic Verilog Testbench Template
  */
 `timescale 1ns / 1ns
 `default_nettype none
