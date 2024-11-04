@@ -20,9 +20,9 @@ While most modules for the project are provided, several modules are left unfini
 Additionally, the testbench for `clk_gen_template.v` is incomplete
 [clk_gen_tb.v](test/clk_gen_tb.v).
 
-[!NOTE]
-The [info.yaml](info.yaml) file points to the wrong filename for both of these files, that also
-needs to be adjusted before all tests complete sucessfully.
+> [!NOTE]
+> The [info.yaml](info.yaml) file points to the wrong filename for both of these files, that also
+> needs to be adjusted before all tests complete sucessfully.
 
 ## Project Description
 Simple digital clock, displays hours, minutes, and seconds in a 24h format. The goal for the project is a simple demonstration of Verilog concepts while 
