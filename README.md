@@ -15,15 +15,7 @@ Simple digital clock, displays hours, minutes, and seconds in a 24h format. The 
 producing an interesting final project. The design is broken down into several components that should be filled in by workshop attendees.
 These are tested using the provided testbenches for functionality, then assembled into the final design.
 
-Since there are not enough output pins to directly drive a 6x
-7-segment displays, the data is shifted out serially using an internal 8-bit shift register.
-The shift register drives 6-external 74xx596 shift registers to the displays. Clock and control
-signals (`serial_clk`, `serial_latch`) are also used to shift and latch the data into the external 
-shift registers respectively. The time can be set using the `hours_set` and `minutes_set` inputs.
-If `set_fast` is high, then the the hours or minutes will be incremented at a rate of 5Hz, 
-otherwise it will be set at a rate of 2Hz. Note that when setting either the minutes, rolling-over
-will not affect the hours setting. If both `hours_set` and `minutes_set` are pressed at the same time
-the seconds will be cleared to zero.
+Simple digital clock, displays hours, minutes, and seconds in either a 24h format. Since there are not enough output pins to directly drive a 6x 7-segment displays, the data is shifted out over SPI to a MAX7219 in 7-segment mode. The time can be set using the hours_set and minutes_set inputs. If set_fast is high, then the the hours or minutes will be incremented at a rate of 5Hz, otherwise it will be set at a rate of 2Hz. Note that when setting either the minutes, rolling-over will not affect the hours setting. If both hours_set and minutes_set are presssed at the same time the seconds will be cleared to zero.
 
 # Local Simulation
 
@@ -65,25 +57,22 @@ Then, assuming there were no errors during simulation, the result can be display
 gtkwave <testbench>.fst
 ```
 
-### Commands for each testbench
+### Elaboration Commands for Key Testbenches 
 
 * [clk_gen_tb](test/clk_gen_tb.v):
   ```batch
   iverilog -o sim\clk_gen_tb.vvp test\clk_gen_tb.v src\clk_gen.v
   vvp sim\clk_gen_tb.vvp -fst
   ```
-  The following command shows the simulation output.
+* [clock_register_tb](test/clock_register_tb.v):
   ```batch
-  gtkwave clk_gen_tb.fst
+  iverilog -o sim\clock_register_tb.vvp test\clock_register_tb.v src\core\clock_register.v src\input\button_debounce.v src\input\refclk_sync.v src\input\clk_gen.v
+  vvp sim\clock_register_tb.vvp -fst
   ```
-* [button_debounce_tb](test/button_debounce_tb.v): 
+* [tiny_tapeout_tb](test/tiny_tapeout_tb.v):
   ```batch
-  iverilog -o sim\button_debounce_tb.vvp test\button_debounce_tb.v src\button_debounce.v src\clk_gen.v
-  vvp sim\button_debounce_tb.vvp -fst
-  ```
-  The following command shows the simulation output.
-  ```batch
-  gtkwave button_debounce_tb.fst
+  iverilog -o sim\tiny_tapeout_tb.vvp src\tiny_tapeout_tb.v src\tt_um_digital_clock_example.v src\clock_wrapper.v src\input\refclk_sync.v src\input\clk_gen.v src\input\button_debounce.v src\core\clock_register.v src\core\decimal_point_controller.v src\core\display_controller.v src\core\output_wrapper.v src\output\clock_to_bcd.v src\output\binary_to_bcd.v src\output\max7219_settings.v src\output\max7219.v src\test\bcd_to_7seg.v src\test\test_max7219_moc.v src\test\test_7seg_to_bcd.v
+  vvp sim\tiny_tapeout_tb.vvp -fst
   ```
 
 ## What is Tiny Tapeout?
