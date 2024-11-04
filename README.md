@@ -22,14 +22,14 @@ Additionally, the testbench for `clk_gen_template.v` is incomplete
 
 > [!NOTE]
 > The [info.yaml](info.yaml) file points to the wrong filename for both of these files, that also
-> needs to be adjusted before all tests complete sucessfully.
+> needs to be adjusted before all tests complete successfully.
 
 ## Project Description
 Simple digital clock, displays hours, minutes, and seconds in a 24h format. The goal for the project is a simple demonstration of Verilog concepts while 
 producing an interesting final project. The design is broken down into several components that should be filled in by workshop attendees.
 These are tested using the provided testbenches for functionality, then assembled into the final design.
 
-Simple digital clock, displays hours, minutes, and seconds in either a 24h format. Since there are not enough output pins to directly drive a 6x 7-segment displays, the data is shifted out over SPI to a MAX7219 in 7-segment mode. The time can be set using the hours_set and minutes_set inputs. If set_fast is high, then the the hours or minutes will be incremented at a rate of 5Hz, otherwise it will be set at a rate of 2Hz. Note that when setting either the minutes, rolling-over will not affect the hours setting. If both hours_set and minutes_set are presssed at the same time the seconds will be cleared to zero.
+Simple digital clock, displays hours, minutes, and seconds in either a 24h format. Since there are not enough output pins to directly drive a 6x 7-segment displays, the data is shifted out over SPI to a MAX7219 in 7-segment mode. The time can be set using the hours_set and minutes_set inputs. If set_fast is high, then the the hours or minutes will be incremented at a rate of 5Hz, otherwise it will be set at a rate of 2Hz. Note that when setting either the minutes, rolling-over will not affect the hours setting. If both hours_set and minutes_set are pressed at the same time the seconds will be cleared to zero.
 
 # Local Simulation
 
@@ -79,7 +79,7 @@ using the Windows tools.
 
 * [clk_gen_tb](test/clk_gen_tb.v):
   ```batch
-  iverilog -o sim\clk_gen_tb.vvp test\clk_gen_tb.v src\clk_gen.v
+  iverilog -o sim\clk_gen_tb.vvp test\clk_gen_tb.v src\input\clk_gen.v
   vvp sim\clk_gen_tb.vvp -fst
   ```
 * [clock_register_tb](test/clock_register_tb.v):
