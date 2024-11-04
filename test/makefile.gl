@@ -18,9 +18,9 @@ PROJECT_SOURCES = tt_um_digital_clock_example.v \
   output/binary_to_bcd.v \
   output/max7219_settings.v \
   output/max7219.v \
-  output/bcd_to_7seg.v \
-  ../test/test_max7219_moc.v \
-  ../test/test_7seg_to_bcd.v
+  test/bcd_to_7seg.v \
+  test/test_max7219_moc.v \
+  test/test_7seg_to_bcd.v
 
 ifneq ($(GATES),yes)
 
@@ -46,8 +46,8 @@ VERILOG_SOURCES += $(PWD)/gate_level_netlist.v
 VERILOG_SOURCES += $(SRC_DIR)/input/refclk_sync.v
 VERILOG_SOURCES += $(SRC_DIR)/input/clk_gen.v
 VERILOG_SOURCES += $(SRC_DIR)/output/bcd_to_7seg.v
-VERILOG_SOURCES += $(PWD)/test_max7219_moc.v
-VERILOG_SOURCES += $(PWD)/test_7seg_to_bcd.v
+VERILOG_SOURCES += $(SRC_DIR)/test/test_max7219_moc.v
+VERILOG_SOURCES += $(SRC_DIR)/test/test_7seg_to_bcd.v
 
 endif
 

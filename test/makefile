@@ -42,8 +42,9 @@ tiny_tapeout_gl_tb.vvp: tiny_tapeout_tb.v \
   tt_um_digital_clock_example.v \
   $(SRC_DIR)/input/refclk_sync.v \
   $(SRC_DIR)/input/clk_gen.v \
-  $(SRC_DIR)/output/bcd_to_7seg.v \
-  test_max7219_moc.v test_7seg_to_bcd.v
+  $(SRC_DIR)/test/bcd_to_7seg.v \
+  $(SRC_DIR)/test/test_max7219_moc.v \
+  $(SRC_DIR)/test/test_7seg_to_bcd.v
 	iverilog -o $@ $(COMPILE_ARGS) $^
 
 tiny_tapeout_tb.vvp: tiny_tapeout_tb.v \
@@ -60,8 +61,9 @@ tiny_tapeout_tb.vvp: tiny_tapeout_tb.v \
   $(SRC_DIR)/output/binary_to_bcd.v \
   $(SRC_DIR)/output/max7219_settings.v \
   $(SRC_DIR)/output/max7219.v \
-  $(SRC_DIR)/output/bcd_to_7seg.v \
-  test_max7219_moc.v test_7seg_to_bcd.v
+  $(SRC_DIR)/test/bcd_to_7seg.v \
+  $(SRC_DIR)/test/test_max7219_moc.v \
+  $(SRC_DIR)/test/test_7seg_to_bcd.v
 	iverilog -o $@ $^
 
 clock_wrapper_tb.vvp: clock_wrapper_tb.v \
@@ -77,8 +79,9 @@ clock_wrapper_tb.vvp: clock_wrapper_tb.v \
   $(SRC_DIR)/output/binary_to_bcd.v \
   $(SRC_DIR)/output/max7219_settings.v \
   $(SRC_DIR)/output/max7219.v \
-  $(SRC_DIR)/output/bcd_to_7seg.v \
-  test_max7219_moc.v test_7seg_to_bcd.v
+  $(SRC_DIR)/test/bcd_to_7seg.v \
+  $(SRC_DIR)/test/test_max7219_moc.v \
+  $(SRC_DIR)/test/test_7seg_to_bcd.v
 	iverilog -o $@ $^
 
 display_controller_tb.vvp: display_controller_tb.v \
@@ -98,8 +101,9 @@ output_wrapper_tb.vvp: output_wrapper_tb.v \
   $(SRC_DIR)/output/binary_to_bcd.v \
   $(SRC_DIR)/output/max7219_settings.v \
   $(SRC_DIR)/output/max7219.v \
-  $(SRC_DIR)/output/bcd_to_7seg.v \
-  test_max7219_moc.v test_7seg_to_bcd.v
+  $(SRC_DIR)/test/bcd_to_7seg.v \
+  $(SRC_DIR)/test/test_max7219_moc.v \
+  $(SRC_DIR)/test/test_7seg_to_bcd.v
 	iverilog -o $@ $^
 
 max7219_settings_tb.vvp: max7219_settings_tb.v \
@@ -109,12 +113,13 @@ max7219_settings_tb.vvp: max7219_settings_tb.v \
 
 max7219_tb.vvp: max7219_tb.v \
   $(SRC_DIR)/output/max7219.v \
-  $(SRC_DIR)/output/bcd_to_7seg.v \
-  test_max7219_moc.v test_7seg_to_bcd.v
+  $(SRC_DIR)/test/bcd_to_7seg.v \
+  $(SRC_DIR)/test/test_max7219_moc.v \
+  $(SRC_DIR)/test/test_7seg_to_bcd.v
 	iverilog -o $@ $^
 
 bcd_to_7seg_tb.vvp: bcd_to_7seg_tb.v \
-  $(SRC_DIR)/output/bcd_to_7seg.v
+  $(SRC_DIR)/test/bcd_to_7seg.v
 	iverilog -o $@ $^
 
 clock_to_bcd_tb.vvp: clock_to_bcd_tb.v \
