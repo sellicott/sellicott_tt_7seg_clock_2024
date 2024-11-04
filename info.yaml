@@ -19,16 +19,17 @@ project:
   source_files:
     - "tt_um_digital_clock_example.v"
     - "clock_wrapper.v"
-    - "clk_gen.v"
-    - "button_debounce.v"
-    - "clock_register.v"
-    - "output_wrapper.v"
-    - "decimal_point_controller.v"
-    - "clock_to_bcd.v"
-    - "binary_to_bcd.v"
-    - "display_controller.v"
-    - "max7219_settings.v"
-    - "max7219.v"
+    - "input/refclk_sync.v"
+    - "input/clk_gen.v"
+    - "input/button_debounce.v"
+    - "core/clock_register.v"
+    - "core/decimal_point_controller.v"
+    - "core/display_controller.v"
+    - "core/output_wrapper.v"
+    - "output/clock_to_bcd.v"
+    - "output/binary_to_bcd.v"
+    - "output/max7219_settings.v"
+    - "output/max7219.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:

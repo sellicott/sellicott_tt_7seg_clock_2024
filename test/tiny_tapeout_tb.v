@@ -225,6 +225,12 @@ module tiny_tapeout_tb ();
   task reset_clock();
     begin : clock_reset
       integer update_count;
+      integer timeout;
+
+      if (i_fast_set)
+        timeout = TIMEOUT_SHORT;
+      else
+        timeout = TIMEOUT_LONG;
 
       $display("Reset Seconds");
       clock_reset_seconds();
@@ -233,10 +239,16 @@ module tiny_tapeout_tb ();
       i_fast_set   = 1'h1;
       i_set_hours  = 1'h1;
       update_count = 0;
-      while (clktime_hours != 5'd0 && update_count < 30) begin
+      while (clktime_hours != 5'd0
+          && timeout_counter < timeout
+          && update_count < 30) begin
+
         @(posedge clk_set_stb);
-        $display("Current Set Time: %02d:%02d.%02d", clktime_hours, clktime_minutes,
+        $display("Current Set Time: %02d:%02d.%02d",
+                 clktime_hours,
+                 clktime_minutes,
                  clktime_seconds);
+
         reset_timeout_counter();
         //repeat (6) @(posedge serial_load);
         repeat (150) @(posedge clk);  // this is because the gl simulation does weird things
@@ -249,10 +261,16 @@ module tiny_tapeout_tb ();
       i_set_hours   = 1'h0;
       i_set_minutes = 1'h1;
       update_count  = 0;
-      while (clktime_minutes != 6'd0 && update_count < 70) begin
+      while (clktime_minutes != 6'd0
+          && timeout_counter < timeout
+          && update_count < 70) begin
+
         @(posedge clk_set_stb);
-        $display("Current Set Time: %02d:%02d.%02d", clktime_hours, clktime_minutes,
+        $display("Current Set Time: %02d:%02d.%02d",
+                 clktime_hours,
+                 clktime_minutes,
                  clktime_seconds);
+
         reset_timeout_counter();
         //repeat (6) @(posedge serial_load);
         repeat (150) @(posedge clk);  // this is because the gl simulation does weird things
