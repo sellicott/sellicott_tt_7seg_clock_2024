@@ -45,7 +45,7 @@ VERILOG_SOURCES += $(PDK_ROOT)/sky130A/libs.ref/sky130_fd_sc_hd/verilog/sky130_f
 VERILOG_SOURCES += $(PWD)/gate_level_netlist.v
 VERILOG_SOURCES += $(SRC_DIR)/input/refclk_sync.v
 VERILOG_SOURCES += $(SRC_DIR)/input/clk_gen.v
-VERILOG_SOURCES += $(SRC_DIR)/output/bcd_to_7seg.v
+VERILOG_SOURCES += $(SRC_DIR)/test/bcd_to_7seg.v
 VERILOG_SOURCES += $(SRC_DIR)/test/test_max7219_moc.v
 VERILOG_SOURCES += $(SRC_DIR)/test/test_7seg_to_bcd.v
 
