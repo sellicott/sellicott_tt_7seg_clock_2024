@@ -10,7 +10,7 @@
 
 // Assert helpers for ending the simulation early in failure
 `define assert(signal, value) \
-  if (signal != value) begin \
+  if (signal !== value) begin \
     $display("ASSERTION FAILED in %m:\nEquality"); \
     $display("\t%d (expected) != %d (actual)", value, signal); \
     close(); \

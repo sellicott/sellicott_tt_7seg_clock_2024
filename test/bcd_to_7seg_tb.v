@@ -95,7 +95,7 @@ module bcd_to_7seg_tb ();
   endtask
 
   `define assert(signal, value) \
-    if (signal != value) begin \
+    if (signal !== value) begin \
       $display("ASSERTION FAILED in %m: %b (actual) != %b (expected)", signal, value); \
       $finish; \
     end

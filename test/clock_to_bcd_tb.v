@@ -9,7 +9,7 @@
 `timescale 1ns / 1ns
 
 `define assert(signal, value) \
-  if (signal != value) begin \
+  if (signal !== value) begin \
     $display("ASSERTION FAILED in %m:\n\t %b (actual) != %b (expected)", signal, value); \
     close(); \
   end
