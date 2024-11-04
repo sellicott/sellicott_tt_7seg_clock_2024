@@ -59,12 +59,6 @@ module tiny_tapeout_tb ();
   reg i_set_hours = 0;
   reg i_set_minutes = 0;
 
-`ifdef GL_TEST
-  wire VPWR = 1'b1;
-  wire VGND = 1'b0;
-`endif
-
-
   // model specific signals
   localparam REFCLK_PERIOD = 200;
   localparam REFCLK_HALF_PERIOD = REFCLK_PERIOD / 2;
@@ -116,11 +110,11 @@ module tiny_tapeout_tb ();
   wire [7:0] uio_out;
   wire [7:0] uio_oe;
 
-  assign ui_in[0] = refclk;
-  assign ui_in[1] = 1'b0;
-  assign ui_in[2] = i_fast_set;
-  assign ui_in[3] = i_set_hours;
-  assign ui_in[4] = i_set_minutes;
+  assign ui_in[0]   = refclk;
+  assign ui_in[1]   = 1'b0;
+  assign ui_in[2]   = i_fast_set;
+  assign ui_in[3]   = i_set_hours;
+  assign ui_in[4]   = i_set_minutes;
   assign ui_in[7:5] = 3'h0;
 
 
@@ -128,8 +122,16 @@ module tiny_tapeout_tb ();
   wire serial_dout = uio_out[1];
   wire serial_clk = uio_out[3];
 
+`ifdef GL_TEST
+  wire VPWR = 1'b1;
+  wire VGND = 1'b0;
+`endif
 
   tt_um_digital_clock_example digital_clock (
+`ifdef GL_TEST
+      .VPWR(VPWR),
+      .VGND(VGND),
+`endif
       .ui_in  (ui_in),    // Dedicated inputs - connected to the input switches
       .uo_out (uo_out),   // Dedicated outputs - connected to the 7 segment display
       .uio_in (uio_in),   // IOs: Bidirectional Input path
@@ -151,9 +153,9 @@ module tiny_tapeout_tb ();
 
   test_max7219_moc display_out (
       .i_clk(clk),
-      .i_serial_din (serial_dout),
+      .i_serial_din(serial_dout),
       .i_serial_load(serial_load),
-      .i_serial_clk (serial_clk),
+      .i_serial_clk(serial_clk),
 
       .o_digit0(digit0),
       .o_digit1(digit1),
@@ -213,24 +215,24 @@ module tiny_tapeout_tb ();
   wire [5:0] clktime_minutes = bcd2 * 10 + bcd3;
   wire [5:0] clktime_seconds = bcd4 * 10 + bcd5;
 
-  task reset_clock ();
-    begin: clock_reset
+  task reset_clock();
+    begin : clock_reset
       integer update_count;
 
       $display("Reset Seconds");
       clock_reset_seconds();
 
       $display("Reset Hours");
-      i_fast_set = 1'h1;
-      i_set_hours = 1'h1;
+      i_fast_set   = 1'h1;
+      i_set_hours  = 1'h1;
       update_count = 0;
-      while(clktime_hours != 5'd0 && update_count < 30) begin 
+      while (clktime_hours != 5'd0 && update_count < 30) begin
         @(posedge clk_set_stb);
         $display("Current Set Time: %02d:%02d.%02d", clktime_hours, clktime_minutes,
                  clktime_seconds);
         reset_timeout_counter();
         //repeat (6) @(posedge serial_load);
-        repeat (150) @(posedge clk); // this is because the gl simulation does weird things
+        repeat (150) @(posedge clk);  // this is because the gl simulation does weird things
         update_count = update_count + 1;
       end
       `assert(clktime_hours, 5'd0);
@@ -240,13 +242,13 @@ module tiny_tapeout_tb ();
       i_set_hours   = 1'h0;
       i_set_minutes = 1'h1;
       update_count  = 0;
-      while(clktime_minutes != 6'd0 && update_count < 70) begin 
+      while (clktime_minutes != 6'd0 && update_count < 70) begin
         @(posedge clk_set_stb);
         $display("Current Set Time: %02d:%02d.%02d", clktime_hours, clktime_minutes,
                  clktime_seconds);
         reset_timeout_counter();
         //repeat (6) @(posedge serial_load);
-        repeat (150) @(posedge clk); // this is because the gl simulation does weird things
+        repeat (150) @(posedge clk);  // this is because the gl simulation does weird things
         update_count = update_count + 1;
       end
       `assert(clktime_minutes, 6'd0);
@@ -258,7 +260,7 @@ module tiny_tapeout_tb ();
   endtask
 
   task clock_set_hours(input [4:0] hours_settime);
-    begin: set_hours
+    begin : set_hours
       integer update_count;
       i_set_hours = 1'h1;
       reset_timeout_counter();
@@ -270,7 +272,7 @@ module tiny_tapeout_tb ();
                  clktime_seconds);
         reset_timeout_counter();
         //repeat (6) @(posedge serial_load);
-        repeat (150) @(posedge clk); // this is because the gl simulation does weird things
+        repeat (150) @(posedge clk);  // this is because the gl simulation does weird things
         update_count = update_count + 1;
       end
 
@@ -282,7 +284,7 @@ module tiny_tapeout_tb ();
   endtask
 
   task clock_set_minutes(input [5:0] minutes_settime);
-    begin: set_minutes
+    begin : set_minutes
       integer update_count;
       i_set_minutes = 1'h1;
       reset_timeout_counter();
@@ -297,7 +299,7 @@ module tiny_tapeout_tb ();
                  clktime_seconds);
         reset_timeout_counter();
         //repeat (6) @(posedge serial_load);
-        repeat (150) @(posedge clk); // this is because the gl simulation does weird things
+        repeat (150) @(posedge clk);  // this is because the gl simulation does weird things
         update_count = update_count + 1;
       end
 
