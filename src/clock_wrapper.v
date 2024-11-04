@@ -15,48 +15,53 @@
 `default_nettype none
 
 module clock_wrapper (
+  // global signals
   i_reset_n,      // syncronous reset (active low)
-  i_clk,          // fast system clock (~50MHz)
+  i_clk,          // fast system clock (~10MHz)
+  i_en,           // enable the project (always 1)
+
+  // Clock inputs
   i_refclk,       // 32.768 kHz clock
-  i_en,           // enable the clock 
+
   i_fast_set,     // select the timeset speed (1 for fast, 0 for slow)
   i_set_hours,    // stop updating time (from refclk) and set hours
   i_set_minutes,  // stop updating time (from refclk) and set minutes
 
-  o_serial_dout,
-  o_serial_load,
-  o_serial_clk
+  // Clock SPI Output to MAX7219
+  o_serial_load,  // SPI _CS_ pin
+  o_serial_dout,  // SPI MOSI pin
+  o_serial_clk    // SPI SCK pin
 );
   
   input wire i_reset_n;
   input wire i_clk;
-  input wire i_refclk;
   input wire i_en;
+
+  input wire i_refclk;
 
   input wire i_fast_set;
   input wire i_set_hours;
   input wire i_set_minutes;
   
-  output wire o_serial_dout;
   output wire o_serial_load;
+  output wire o_serial_dout;
   output wire o_serial_clk;
 
-  // sync register
+  // Syncronize the refclk input to the system clock 
   wire refclk_sync;
 
-  // blocks used to generate signals for the button debouncer
-  // clock strobe generator
-  wire clk_1hz_stb;
-  wire clk_slow_set_stb;
-  wire clk_fast_set_stb;
-  wire clk_debounce_stb;
- 
   refclk_sync refclk_sync_inst (
     .i_reset_n     (i_reset_n),
     .i_clk         (i_clk),
     .i_refclk      (i_refclk),
     .o_refclk_sync (refclk_sync)
   );
+
+  // generate strobe signals for updating the clock
+  wire clk_1hz_stb;
+  wire clk_slow_set_stb;
+  wire clk_fast_set_stb;
+  wire clk_debounce_stb;
 
   clk_gen clk_gen_inst (
     .i_reset_n      (i_reset_n),
@@ -88,13 +93,16 @@ module clock_wrapper (
     .o_set_minutes_db (clk_set_minutes)
   );
 
-  // Clock register
+  // Modules for holding the time
   wire [4:0] clk_hours;
   wire [5:0] clk_minutes;
   wire [5:0] clk_seconds;
-  wire [5:0] clk_dp;
+  wire [5:0] clk_dp; // decimal points for the displays
 
+  // select between setting the clock at 6Hz or 2Hz
   wire clk_set_stb = clk_fast_set ? clk_fast_set_stb : clk_slow_set_stb;
+
+  // test if we are setting the clock or running the clock 
   wire clk_set = clk_set_hours || clk_set_minutes;
 
   clock_register clock_reg_inst (
@@ -116,17 +124,24 @@ module clock_wrapper (
     .o_seconds (clk_seconds)
   );
 
+
+  // Take the time and display it on the 7-segment displays
   wire display_stb;
   wire display_busy;
   wire display_ack;
   wire write_config;
 
+  // blink the colon at 0.5Hz if the clock is running
   decimal_point_controller dp_control_inst (
     .i_set_time (clk_set),
     .i_seconds  (clk_seconds),
     .o_dp       (clk_dp) 
   );
 
+  // override display updates on clock reset in order to
+  // write the MAX7219 configuration registers
+  // if we are setting the clock, update the display on
+  // clk_set_stb signal instead of 1hz signal
   display_controller display_control_inst (
     .i_reset_n (i_reset_n),
     .i_clk     (i_clk),
@@ -141,6 +156,7 @@ module clock_wrapper (
     .o_write_config (write_config)
   );
 
+  // MAX7219 SPI Output driver
   output_wrapper display_inst (
     .i_reset_n (i_reset_n),
     .i_clk     (i_clk),
@@ -161,6 +177,5 @@ module clock_wrapper (
     .o_serial_load (o_serial_load),
     .o_serial_clk  (o_serial_clk)
   );
-
 
 endmodule

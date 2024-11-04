@@ -5,7 +5,7 @@
  *
  * Generate pulse signals with appropriate timings. This block assumes there
  * is a 32,768 Hz signal coming in on the i_refclk input (that has been
- * appropriately retimed), this will be divided approprately to generate a 
+ * appropriately retimed), this will be divided approprately to generate a
  * 1 clk wide pulse for:
  * 1 Hz <= main clock
  * 2 Hz <= slow set clock
@@ -24,10 +24,10 @@ module clk_gen (
   // Strobe from 32,768 Hz reference clock
   i_refclk,
   // output strobe signals
-  o_1hz_stb,
-  o_slow_set_stb,
-  o_fast_set_stb,
-  o_debounce_stb
+  o_1hz_stb,      // refclk / 2^15 -> 1Hz
+  o_slow_set_stb, // refclk / 2^14 -> 2Hz
+  o_fast_set_stb, // refclk / 2^12 -> 8Hz
+  o_debounce_stb  // refclk / 2^4  -> 4.096KHz
 );
 
 input wire i_reset_n;
@@ -61,7 +61,6 @@ always @(posedge i_clk) begin
 end
 
 // generate strobe signals off of the clock divider
-
 // 32,768 / 2^15 -> 1hz
 stb_gen stb_gen_1hz (
   .i_reset_n (i_reset_n),
@@ -70,7 +69,7 @@ stb_gen stb_gen_1hz (
   .o_sig_stb (o_1hz_stb)
 );
 
-// 32,768 / 2^15 -> 2hz
+// 32,768 / 2^13 -> 2hz
 stb_gen stb_gen_slow_clk (
   .i_reset_n (i_reset_n),
   .i_clk     (i_clk),
@@ -78,7 +77,7 @@ stb_gen stb_gen_slow_clk (
   .o_sig_stb (o_slow_set_stb)
 );
 
-// 32,768 / 2^12 -> 8hz
+// 32,768 / 2^11 -> 8hz
 stb_gen stb_gen_fast_clk (
   .i_reset_n (i_reset_n),
   .i_clk     (i_clk),
@@ -96,38 +95,8 @@ stb_gen stb_gen_debounce_clk (
 
 endmodule
 
-module refclk_sync (
-  // global signals
-  i_reset_n,
-  i_clk,
-  // 32,768 Hz reference clock
-  i_refclk,
-  // syncronized reference clock output
-  o_refclk_sync
-);
-
-input wire i_reset_n;
-input wire i_clk;
-input wire i_refclk;
-
-output wire o_refclk_sync;
-
-// We need to retime the input refclk signal so that we can use it to enable
-// the counter
-reg [1:0] refclk_sync_reg;
-
-// define a shift register 
-always @(posedge i_clk) begin
-  refclk_sync_reg <= {refclk_sync_reg[0], i_refclk};
-  if (!i_reset_n) begin
-    refclk_sync_reg <= 2'h0;
-  end
-end
-
-assign o_refclk_sync = refclk_sync_reg[1];
-
-endmodule
-
+// generate a single system clock pulse (o_sig_stb)
+// on the rising edge of i_sig.
 module stb_gen (
   // global signals
   i_reset_n,

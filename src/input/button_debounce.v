@@ -14,23 +14,29 @@
 `default_nettype none
 
 module button_debounce (
+  // global signals
   i_reset_n,
   i_clk,
   
+  // 4.096KHz strobe signal
   i_debounce_stb,
   
+  // input buttons
   i_fast_set,
   i_set_hours,
   i_set_minutes,
   
+  // debounced outputs
   o_fast_set_db,
   o_set_hours_db,
   o_set_minutes_db
 );
+// combine 5 samples from the input button
 parameter NUM_SAMPLES = 5;
 
 input wire i_reset_n;
 input wire i_clk;
+
 input wire i_debounce_stb;
   
 input wire i_fast_set;
