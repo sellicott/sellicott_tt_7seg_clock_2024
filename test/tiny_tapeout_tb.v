@@ -22,7 +22,50 @@
   end
 
 module tiny_tapeout_tb ();
+  // cocotb interface signals
   reg test_done = 0;
+  reg clk_dummy = 0;
+
+  // global testbench signals
+  localparam CLK_PERIOD    = 100;
+  localparam REFCLK_PERIOD = 200;
+  localparam TIMEOUT_SHORT = 5000;
+  localparam TIMEOUT_LONG  = 20000;
+
+  reg clk = 0;
+  reg rst_n = 0;
+  reg ena = 1;
+
+  reg run_timeout_counter;
+  reg [15:0] timeout_counter = 0;
+
+  // Named Module inputs/outputs
+  reg refclk = 0;
+  reg i_fast_set = 0;
+  reg i_set_hours = 0;
+  reg i_set_minutes = 0;
+
+  wire serial_load;
+  wire serial_dout;
+  wire serial_clk;
+
+  // setup actual Tiny Tapeout IO
+  wire [7:0] ui_in;
+  wire [7:0] uo_out;
+  wire [7:0] uio_in = 8'h0;
+  wire [7:0] uio_out;
+  wire [7:0] uio_oe;
+
+  assign ui_in[0]   = refclk;
+  assign ui_in[1]   = 1'b0;
+  assign ui_in[2]   = i_fast_set;
+  assign ui_in[3]   = i_set_hours;
+  assign ui_in[4]   = i_set_minutes;
+  assign ui_in[7:5] = 3'h0;
+
+  assign serial_load = uio_out[0];
+  assign serial_dout = uio_out[1];
+  assign serial_clk = uio_out[3];
 
   // setup file dumping things
   localparam STARTUP_DELAY = 5;
@@ -41,45 +84,47 @@ module tiny_tapeout_tb ();
     close();
   end
 
-  // setup global signals
-  localparam CLK_PERIOD = 100;
+  // System Clock 
   localparam CLK_HALF_PERIOD = CLK_PERIOD / 2;
-
-  reg clk = 0;
-  reg rst_n = 0;
-  reg ena = 1;
-
-  reg clk_dummy = 0;
-
   always #(CLK_HALF_PERIOD) begin
     clk <= ~clk;
   end
 
-  reg i_fast_set = 0;
-  reg i_set_hours = 0;
-  reg i_set_minutes = 0;
-
-  // model specific signals
-  localparam REFCLK_PERIOD = 200;
+  // Reference Clock
   localparam REFCLK_HALF_PERIOD = REFCLK_PERIOD / 2;
-  reg refclk = 0;
-
   always #(REFCLK_HALF_PERIOD) begin
     refclk <= ~refclk;
   end
 
-  reg run_timeout_counter;
-  reg [15:0] timeout_counter = 0;
+  // Timeout Clock
   always @(posedge refclk) begin
     if (run_timeout_counter) timeout_counter <= timeout_counter + 1'd1;
     else timeout_counter <= 16'h0;
   end
 
-  // sync register
-  wire refclk_sync;
+// Setup the Tiny Tapeout Project
+`ifdef GL_TEST
+  wire VPWR = 1'b1;
+  wire VGND = 1'b0;
+`endif
 
-  // blocks used to generate signals for the button debouncer
-  // clock strobe generator
+  tt_um_digital_clock_example digital_clock (
+`ifdef GL_TEST
+    .VPWR(VPWR),
+    .VGND(VGND),
+`endif
+    .ui_in  (ui_in),    // Dedicated inputs - connected to the input switches
+    .uo_out (uo_out),   // Dedicated outputs - connected to the 7 segment display
+    .uio_in (uio_in),   // IOs: Bidirectional Input path
+    .uio_out(uio_out),  // IOs: Bidirectional Output path
+    .uio_oe (uio_oe),   // IOs: Bidirectional Enable path (active high: 0=input, 1=output)
+    .ena    (ena),      // will go high when the design is enabled
+    .clk    (clk),      // clock ~ 10MHz
+    .rst_n  (rst_n)     // reset_n - low to reset
+  );
+
+  // Duplicate the input clocking modules to make using the testbench easier
+  wire refclk_sync;
   wire clk_1hz_stb;
   wire clk_slow_set_stb;
   wire clk_fast_set_stb;
@@ -104,44 +149,7 @@ module tiny_tapeout_tb ();
 
   wire clk_set_stb = i_fast_set ? clk_fast_set_stb : clk_slow_set_stb;
 
-  wire [7:0] ui_in;
-  wire [7:0] uo_out;
-  wire [7:0] uio_in = 8'h0;
-  wire [7:0] uio_out;
-  wire [7:0] uio_oe;
-
-  assign ui_in[0]   = refclk;
-  assign ui_in[1]   = 1'b0;
-  assign ui_in[2]   = i_fast_set;
-  assign ui_in[3]   = i_set_hours;
-  assign ui_in[4]   = i_set_minutes;
-  assign ui_in[7:5] = 3'h0;
-
-
-  wire serial_load = uio_out[0];
-  wire serial_dout = uio_out[1];
-  wire serial_clk = uio_out[3];
-
-`ifdef GL_TEST
-  wire VPWR = 1'b1;
-  wire VGND = 1'b0;
-`endif
-
-  tt_um_digital_clock_example digital_clock (
-`ifdef GL_TEST
-      .VPWR(VPWR),
-      .VGND(VGND),
-`endif
-      .ui_in  (ui_in),    // Dedicated inputs - connected to the input switches
-      .uo_out (uo_out),   // Dedicated outputs - connected to the 7 segment display
-      .uio_in (uio_in),   // IOs: Bidirectional Input path
-      .uio_out(uio_out),  // IOs: Bidirectional Output path
-      .uio_oe (uio_oe),   // IOs: Bidirectional Enable path (active high: 0=input, 1=output)
-      .ena    (ena),      // will go high when the design is enabled
-      .clk    (clk),      // clock ~ 10MHz
-      .rst_n  (rst_n)     // reset_n - low to reset
-  );
-
+  // Testbench modules for displaying the Tiny Tapeout Output
   wire [7:0] digit0;
   wire [7:0] digit1;
   wire [7:0] digit2;
@@ -209,12 +217,11 @@ module tiny_tapeout_tb ();
       .o_bcd(bcd7)
   );
 
-  localparam TIMEOUT = 40000;
-
   wire [4:0] clktime_hours = bcd0 * 10 + bcd1;
   wire [5:0] clktime_minutes = bcd2 * 10 + bcd3;
   wire [5:0] clktime_seconds = bcd4 * 10 + bcd5;
 
+  // Tasks for running simulations
   task reset_clock();
     begin : clock_reset
       integer update_count;
@@ -262,20 +269,37 @@ module tiny_tapeout_tb ();
   task clock_set_hours(input [4:0] hours_settime);
     begin : set_hours
       integer update_count;
+      integer timeout;
+
+      if (i_fast_set)
+        timeout = TIMEOUT_SHORT;
+      else
+        timeout = TIMEOUT_LONG;
+
+      $display("Max Timeout: %d", timeout);
+
       i_set_hours = 1'h1;
       reset_timeout_counter();
+
       update_count = 0;
-      while (clktime_hours < hours_settime && timeout_counter <= TIMEOUT && update_count < 30) begin
+      while (clktime_hours < hours_settime
+          && timeout_counter < timeout 
+          && update_count < 30) begin
+
         @(posedge clk_set_stb);
-        `assert_cond(timeout_counter, <, TIMEOUT);
-        $display("Current Set Time: %02d:%02d.%02d", clktime_hours, clktime_minutes,
+        $display("Current Set Time: %02d:%02d.%02d",
+                 clktime_hours,
+                 clktime_minutes,
                  clktime_seconds);
+
         reset_timeout_counter();
         //repeat (6) @(posedge serial_load);
         repeat (150) @(posedge clk);  // this is because the gl simulation does weird things
         update_count = update_count + 1;
       end
 
+      `assert_cond(update_count , <, 30);
+      `assert_cond(timeout_counter, <, timeout);
       `assert(clktime_hours, hours_settime);
       @(posedge clk);
       run_timeout_counter = 1'h0;
@@ -286,23 +310,35 @@ module tiny_tapeout_tb ();
   task clock_set_minutes(input [5:0] minutes_settime);
     begin : set_minutes
       integer update_count;
+      integer timeout;
+      if (i_fast_set)
+        timeout = TIMEOUT_SHORT;
+      else
+        timeout = TIMEOUT_LONG;
+
       i_set_minutes = 1'h1;
       reset_timeout_counter();
+
       update_count = 0;
       while (clktime_minutes != minutes_settime
-          && timeout_counter <= TIMEOUT
+          && timeout_counter <= timeout 
           && update_count < 70) begin
 
         @(posedge clk_set_stb);
-        `assert_cond(timeout_counter, <, TIMEOUT);
-        $display("Current Set Time: %02d:%02d.%02d", clktime_hours, clktime_minutes,
+        `assert_cond(timeout_counter, <, timeout);
+        $display("Current Set Time: %02d:%02d.%02d",
+                 clktime_hours,
+                 clktime_minutes,
                  clktime_seconds);
+
         reset_timeout_counter();
         //repeat (6) @(posedge serial_load);
         repeat (150) @(posedge clk);  // this is because the gl simulation does weird things
         update_count = update_count + 1;
       end
 
+      `assert_cond(update_count , <, 70);
+      `assert_cond(timeout_counter, <, timeout);
       `assert(clktime_minutes, minutes_settime);
       @(posedge clk);
       run_timeout_counter = 1'h0;
@@ -339,6 +375,7 @@ module tiny_tapeout_tb ();
       @(posedge clk_set_stb);
       i_fast_set = 1'h1;
       reset_clock();
+
       // set the hours and minutes
       $display("Set Hours");
       clock_set_hours(10);
