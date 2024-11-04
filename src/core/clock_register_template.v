@@ -39,6 +39,11 @@ input wire i_set_stb;
 input wire i_set_hours;
 input wire i_set_minutes;
 
+// time outputs
+output reg [4:0] o_hours;
+output reg [5:0] o_minutes;
+output reg [5:0] o_seconds;
+
 // TODO: Implement the clock
 
 endmodule
