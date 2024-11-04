@@ -12,17 +12,26 @@
 // Assert helpers for ending the simulation early in failure
 `define assert(signal, value) \
   if (signal != value) begin \
-    $display("ASSERTION FAILED in %m:\n\t 0x%H (actual) != 0x%H (expected)", signal, value); \
+    $display("ASSERTION FAILED in %m:\nEquality"); \
+    $display("\t%d (expected) != %d (actual)", value, signal); \
     close(); \
   end
 
 `define assert_cond(signal, cond, value) \
   if (!(signal cond value)) begin \
-    $display("ASSERTION FAILED in %m:\n\t %d (actual), %d (expected)", signal, value); \
+    $display("ASSERTION FAILED in %m:\nCondition:"); \
+    $display("\n\texpected: %d\n\tactual: %d", value, signal); \
     close(); \
   end
 
-module template_tb ();
+`define assert_timeout(max_count) \
+  if (!(timeout_counter < max_count)) begin \
+    $display("ASSERTION FAILED in %m\nTimeout:"); \
+    $display("\tspecified max count: %d\n\tactual count: %d", max_count, timeout_counter); \
+    close(); \
+  end
+
+module tb_template ();
   // cocotb interface signals
   reg test_done = 0;
 
@@ -45,8 +54,8 @@ module template_tb ();
   // setup file dumping things
   localparam STARTUP_DELAY = 5;
   initial begin
-    $dumpfile("tb.vcd");
-    $dumpvars(0, template_tb);
+    $dumpfile("tb_template.fst");
+    $dumpvars(0, tb_template);
     #STARTUP_DELAY;
 
     $display("Testbench Template");
@@ -72,20 +81,20 @@ module template_tb ();
     else timeout_counter <= 16'h0;
   end
 
-// setup power pins if doing post-synthesis simulations
+  // setup power pins if doing post-synthesis simulations
 `ifdef GL_TEST
   wire VPWR = 1'b1;
   wire VGND = 1'b0;
 `endif
 
-// This needs to be included in the ports list of any synthesized module so
-// that gate level simulations can be run
-//`ifdef GL_TEST
-//    .VPWR(VPWR),
-//    .VGND(VGND),
-//`endif
+  // This needs to be included in the ports list of any synthesized module so
+  // that gate level simulations can be run
+  //`ifdef GL_TEST
+  //    .VPWR(VPWR),
+  //    .VGND(VGND),
+  //`endif
 
-  //TODO: Add device to test here
+  // TODO: Add device to test here
 
   // Add any helper modules for displaying 
   // TODO: Add helper modules here
@@ -94,21 +103,30 @@ module template_tb ();
   // I usually put these at the end so that I can access all the signals in
   // the testbench
   task generic_task(
-    input timeout
+    input integer timeout
   );
     begin : my_generic_task
+      $display("Timeout: %d", timeout);
 
       // reset our watchdog timer
       reset_timeout_counter();
 
-      while ( /* some condition */
-          && timeout_counter < timeout) begin 
-
-        //TODO: Implement the generic task we want to accomplish
+      while ( /* some condition */ timeout_counter < timeout) begin 
+        // TODO: Implement the generic task we want to accomplish
+        @(posedge clk);
       end
 
       // make sure we didn't run out the watchdog timer
-      `assert_cond(timeout_counter, <, timeout);
+      `assert_timeout(timeout);
+    end
+  endtask
+
+  task reset_timeout_counter();
+    begin
+      @(posedge clk);
+      run_timeout_counter = 1'd0;
+      @(posedge clk);
+      run_timeout_counter = 1'd1;
     end
   endtask
 
