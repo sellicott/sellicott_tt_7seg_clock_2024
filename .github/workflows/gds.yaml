@@ -78,14 +78,11 @@ jobs:
     - name: Run tests
       shell: bash
       run: |
-        pwd
-        ls -l
         cp tt_submission/*.v "$TEST_DIR/gate_level_netlist.v"
         cd "$TEST_DIR"
-        ls -l
         rm -f tb.vcd results.xml
-        make -f Makefile clean
-        GATES=yes make -f Makefile
+        make -f makefile.gl clean
+        GATES=yes make -f makefile.gl
         test -f results.xml
         ! grep failure results.xml
 

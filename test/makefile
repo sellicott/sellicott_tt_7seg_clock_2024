@@ -40,100 +40,108 @@ tiny_tapeout_gl_tb.vvp: tiny_tapeout_tb.v \
   $(PDK_ROOT)/sky130A/libs.ref/sky130_fd_sc_hd/verilog/primitives.v \
   $(PDK_ROOT)/sky130A/libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v \
   tt_um_digital_clock_example.v \
-  $(SRC_DIR)/refclk_sync.v \
-  $(SRC_DIR)/clk_gen.v \
-  $(SRC_DIR)/bcd_to_7seg.v \
+  $(SRC_DIR)/input/refclk_sync.v \
+  $(SRC_DIR)/input/clk_gen.v \
+  $(SRC_DIR)/output/bcd_to_7seg.v \
   test_max7219_moc.v test_7seg_to_bcd.v
 	iverilog -o $@ $(COMPILE_ARGS) $^
 
 tiny_tapeout_tb.vvp: tiny_tapeout_tb.v \
   $(SRC_DIR)/tt_um_digital_clock_example.v \
   $(SRC_DIR)/clock_wrapper.v \
-  $(SRC_DIR)/refclk_sync.v \
-  $(SRC_DIR)/clk_gen.v \
-  $(SRC_DIR)/button_debounce.v \
-  $(SRC_DIR)/clock_register.v \
-  $(SRC_DIR)/decimal_point_controller.v \
-  $(SRC_DIR)/display_controller.v \
-  $(SRC_DIR)/output_wrapper.v \
-  $(SRC_DIR)/clock_to_bcd.v $(SRC_DIR)/binary_to_bcd.v \
-  $(SRC_DIR)/max7219_settings.v $(SRC_DIR)/max7219.v \
-  $(SRC_DIR)/bcd_to_7seg.v \
+  $(SRC_DIR)/input/refclk_sync.v \
+  $(SRC_DIR)/input/clk_gen.v \
+  $(SRC_DIR)/input/button_debounce.v \
+  $(SRC_DIR)/core/clock_register.v \
+  $(SRC_DIR)/core/decimal_point_controller.v \
+  $(SRC_DIR)/core/display_controller.v \
+  $(SRC_DIR)/core/output_wrapper.v \
+  $(SRC_DIR)/output/clock_to_bcd.v \
+  $(SRC_DIR)/output/binary_to_bcd.v \
+  $(SRC_DIR)/output/max7219_settings.v \
+  $(SRC_DIR)/output/max7219.v \
+  $(SRC_DIR)/output/bcd_to_7seg.v \
   test_max7219_moc.v test_7seg_to_bcd.v
 	iverilog -o $@ $^
 
 clock_wrapper_tb.vvp: clock_wrapper_tb.v \
   $(SRC_DIR)/clock_wrapper.v \
-  $(SRC_DIR)/refclk_sync.v \
-  $(SRC_DIR)/clk_gen.v \
-  $(SRC_DIR)/button_debounce.v \
-  $(SRC_DIR)/clock_register.v \
-  $(SRC_DIR)/decimal_point_controller.v \
-  $(SRC_DIR)/display_controller.v \
-  $(SRC_DIR)/output_wrapper.v \
-  $(SRC_DIR)/clock_to_bcd.v $(SRC_DIR)/binary_to_bcd.v \
-  $(SRC_DIR)/max7219_settings.v $(SRC_DIR)/max7219.v \
-  $(SRC_DIR)/bcd_to_7seg.v \
+  $(SRC_DIR)/input/refclk_sync.v \
+  $(SRC_DIR)/input/clk_gen.v \
+  $(SRC_DIR)/input/button_debounce.v \
+  $(SRC_DIR)/core/clock_register.v \
+  $(SRC_DIR)/core/decimal_point_controller.v \
+  $(SRC_DIR)/core/display_controller.v \
+  $(SRC_DIR)/core/output_wrapper.v \
+  $(SRC_DIR)/output/clock_to_bcd.v \
+  $(SRC_DIR)/output/binary_to_bcd.v \
+  $(SRC_DIR)/output/max7219_settings.v \
+  $(SRC_DIR)/output/max7219.v \
+  $(SRC_DIR)/output/bcd_to_7seg.v \
   test_max7219_moc.v test_7seg_to_bcd.v
 	iverilog -o $@ $^
 
 display_controller_tb.vvp: display_controller_tb.v \
-  $(SRC_DIR)/display_controller.v \
-  $(SRC_DIR)/refclk_sync.v \
-  $(SRC_DIR)/clk_gen.v \
-  $(SRC_DIR)/output_wrapper.v \
-  $(SRC_DIR)/clock_to_bcd.v $(SRC_DIR)/binary_to_bcd.v \
-  $(SRC_DIR)/max7219_settings.v $(SRC_DIR)/max7219.v
+  $(SRC_DIR)/core/display_controller.v \
+  $(SRC_DIR)/input/refclk_sync.v \
+  $(SRC_DIR)/input/clk_gen.v \
+  $(SRC_DIR)/core/output_wrapper.v \
+  $(SRC_DIR)/output/clock_to_bcd.v \
+  $(SRC_DIR)/output/binary_to_bcd.v \
+  $(SRC_DIR)/output/max7219_settings.v \
+  $(SRC_DIR)/output/max7219.v
 	iverilog -o $@ $^
 
 output_wrapper_tb.vvp: output_wrapper_tb.v \
-  $(SRC_DIR)/output_wrapper.v \
-  $(SRC_DIR)/clock_to_bcd.v $(SRC_DIR)/binary_to_bcd.v \
-  $(SRC_DIR)/max7219_settings.v $(SRC_DIR)/max7219.v \
-  $(SRC_DIR)/bcd_to_7seg.v \
+  $(SRC_DIR)/core/output_wrapper.v \
+  $(SRC_DIR)/output/clock_to_bcd.v \
+  $(SRC_DIR)/output/binary_to_bcd.v \
+  $(SRC_DIR)/output/max7219_settings.v \
+  $(SRC_DIR)/output/max7219.v \
+  $(SRC_DIR)/output/bcd_to_7seg.v \
   test_max7219_moc.v test_7seg_to_bcd.v
 	iverilog -o $@ $^
 
 max7219_settings_tb.vvp: max7219_settings_tb.v \
-  $(SRC_DIR)/max7219_settings.v \
-  $(SRC_DIR)/max7219.v
+  $(SRC_DIR)/output/max7219_settings.v \
+  $(SRC_DIR)/output/max7219.v
 	iverilog -o $@ $^
 
 max7219_tb.vvp: max7219_tb.v \
-  $(SRC_DIR)/max7219.v \
-  $(SRC_DIR)/bcd_to_7seg.v \
+  $(SRC_DIR)/output/max7219.v \
+  $(SRC_DIR)/output/bcd_to_7seg.v \
   test_max7219_moc.v test_7seg_to_bcd.v
 	iverilog -o $@ $^
 
 bcd_to_7seg_tb.vvp: bcd_to_7seg_tb.v \
-  $(SRC_DIR)/bcd_to_7seg.v
+  $(SRC_DIR)/output/bcd_to_7seg.v
 	iverilog -o $@ $^
 
 clock_to_bcd_tb.vvp: clock_to_bcd_tb.v \
-  $(SRC_DIR)/clock_to_bcd.v \
-  $(SRC_DIR)/binary_to_bcd.v
+  $(SRC_DIR)/output/clock_to_bcd.v \
+  $(SRC_DIR)/output/binary_to_bcd.v
 	iverilog -o $@ $^
 
 binary_to_bcd_tb.vvp: binary_to_bcd_tb.v \
-  $(SRC_DIR)/binary_to_bcd.v
+  $(SRC_DIR)/output/binary_to_bcd.v
 	iverilog -o $@ $^
 
 clock_register_tb.vvp: clock_register_tb.v \
-  $(SRC_DIR)/clock_register.v \
-  $(SRC_DIR)/button_debounce.v \
-  $(SRC_DIR)/refclk_sync.v \
-  $(SRC_DIR)/clk_gen.v
+  $(SRC_DIR)/core/clock_register.v \
+  $(SRC_DIR)/input/button_debounce.v \
+  $(SRC_DIR)/input/refclk_sync.v \
+  $(SRC_DIR)/input/clk_gen.v
 	iverilog -o $@ $^
 
 button_debounce_tb.vvp: button_debounce_tb.v \
-  $(SRC_DIR)/button_debounce.v \
-  $(SRC_DIR)/refclk_sync.v \
-  $(SRC_DIR)/clk_gen.v
+  $(SRC_DIR)/input/button_debounce.v \
+  $(SRC_DIR)/input/refclk_sync.v \
+  $(SRC_DIR)/input/clk_gen.v
 	iverilog -o $@ $^
 
 clk_gen_tb.vvp: clk_gen_tb.v \
-  $(SRC_DIR)/refclk_sync.v \
-  $(SRC_DIR)/clk_gen.v
+  $(SRC_DIR)/input/refclk_sync.v \
+  $(SRC_DIR)/input/clk_gen.v
 	iverilog -o $@ $^
 
 # Generate output files from elaborated simulation
