@@ -6,9 +6,23 @@
 > This is a demonstration Tiny Tapeout project for the workshop series held by the
 > [Columbus chapter of IEEE SSCS/CAS](https://r2.ieee.org/columbus-ssccas/blog/2024/01/14/tiny-tapeout-workshop-announcement/).
 
+## Using this Template
+
 The goal of this project is to demonstrate the Tiny Tapeout flow starting from
 a Verilog design to build a GDS file for manufacturing. 
 - [Read the project documentation](docs/info.md)
+
+While most modules for the project are provided, several modules are left unfinished
+(as an excersise to the reader :-) ). The unfinished modules are:
+[clk_gen_template.v](src/clk_gen_template.v), and
+[clock_register_template.v](src/clock_register_template.v).
+
+Additionally, the testbench for `clk_gen_template.v` is incomplete
+[clk_gen_tb.v](test/clk_gen_tb.v).
+
+[!NOTE]
+The [info.yaml](info.yaml) file points to the wrong filename for both of these files, that also
+needs to be adjusted before all tests complete sucessfully.
 
 ## Project Description
 Simple digital clock, displays hours, minutes, and seconds in a 24h format. The goal for the project is a simple demonstration of Verilog concepts while 
@@ -57,7 +71,11 @@ Then, assuming there were no errors during simulation, the result can be display
 gtkwave <testbench>.fst
 ```
 
-### Elaboration Commands for Key Testbenches 
+### Functional Simulation Commands for Key Testbenches 
+While (almost) all of the modules in the project have individual testbenches that can be run using
+the commands described above, the following three testbenches are the the ones that will be focused
+on at the workshop. Therefore, the commands to build the testbenches are provided for easy access
+using the Windows tools.
 
 * [clk_gen_tb](test/clk_gen_tb.v):
   ```batch
@@ -74,6 +92,8 @@ gtkwave <testbench>.fst
   iverilog -o sim\tiny_tapeout_tb.vvp src\tiny_tapeout_tb.v src\tt_um_digital_clock_example.v src\clock_wrapper.v src\input\refclk_sync.v src\input\clk_gen.v src\input\button_debounce.v src\core\clock_register.v src\core\decimal_point_controller.v src\core\display_controller.v src\core\output_wrapper.v src\output\clock_to_bcd.v src\output\binary_to_bcd.v src\output\max7219_settings.v src\output\max7219.v src\test\bcd_to_7seg.v src\test\test_max7219_moc.v src\test\test_7seg_to_bcd.v
   vvp sim\tiny_tapeout_tb.vvp -fst
   ```
+
+### Show Elaborated Block Diagram
 
 ## What is Tiny Tapeout?
 
