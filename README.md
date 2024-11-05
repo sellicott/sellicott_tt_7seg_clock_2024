@@ -31,6 +31,10 @@ These are tested using the provided testbenches for functionality, then assemble
 
 Simple digital clock, displays hours, minutes, and seconds in either a 24h format. Since there are not enough output pins to directly drive a 6x 7-segment displays, the data is shifted out over SPI to a MAX7219 in 7-segment mode. The time can be set using the hours_set and minutes_set inputs. If set_fast is high, then the the hours or minutes will be incremented at a rate of 5Hz, otherwise it will be set at a rate of 2Hz. Note that when setting either the minutes, rolling-over will not affect the hours setting. If both hours_set and minutes_set are pressed at the same time the seconds will be cleared to zero.
 
+A block diagram of the design is shown below.
+
+![](docs/block-diagram.png)
+
 # Local Simulation
 
 This project can be locally simulated (including on Windows) using the [OSS-CAD-Suite](https://github.com/YosysHQ/oss-cad-suite-build/releases) from YosysHQ.
@@ -94,6 +98,23 @@ using the Windows tools.
   ```
 
 ### Show Elaborated Block Diagram
+It is useful to see what the elaboration/synthesis tool does with the
+design. We can run `Yosys` (using a helper script) on the design to
+generate a block diagram. In general run:
+
+```batch
+elaborate_json.bat <top_module> <list of input files>
+```
+This will copy the design (in JSON format) to your clipboard (assuming no errors). Then paste the output into [netlistsvg](https://neilturley.dev/netlistsvg/)
+
+The result should be something like this:
+
+![](docs/netlistsvg.png)
+
+* clk_gen.v
+  ```batch
+  elaborate_json.bat clk_gen src\input\clk_gen.v
+  ```
 
 ## What is Tiny Tapeout?
 
