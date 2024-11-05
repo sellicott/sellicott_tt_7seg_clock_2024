@@ -13,7 +13,7 @@ a Verilog design to build a GDS file for manufacturing.
 - [Read the project documentation](docs/info.md)
 
 While most modules for the project are provided, several modules are left unfinished
-(as an excersise to the reader :-) ). The unfinished modules are:
+(as an exercise to the reader). The unfinished modules are:
 [clk_gen_template.v](src/input/clk_gen_template.v), and
 [clock_register_template.v](src/core/clock_register_template.v).
 
